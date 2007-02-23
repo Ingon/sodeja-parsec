@@ -1,13 +1,13 @@
-package org.sodeja.parsec.examples.bp;
+package org.sodeja.parsec.examples.script;
 
 import java.io.Reader;
 
 import org.sodeja.parsec.lexer.AbstractLexer;
 import org.sodeja.parsec.lexer.LexerHelper;
 
-public class BPLexer extends AbstractLexer<String> {
-	
-	public BPLexer(Reader originalReader) {
+public class ScriptLexer extends AbstractLexer<String> {
+
+	public ScriptLexer(Reader originalReader) {
 		super(originalReader);
 	}
 
@@ -19,6 +19,11 @@ public class BPLexer extends AbstractLexer<String> {
 	@Override
 	protected void tokenizeDelegate(char ch) {
 		if(Character.isWhitespace(ch)) {
+			return;
+		}
+		
+		if(ch == '#') {
+			LexerHelper.readTillEOL(this);
 			return;
 		}
 		
