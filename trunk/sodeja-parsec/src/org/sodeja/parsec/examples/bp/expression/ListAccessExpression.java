@@ -15,8 +15,17 @@ public class ListAccessExpression extends Expression {
 	}
 
 	@Override
+	public Object read(Map<String, Object> rootContext) {
+		return readFromList(ROOT_CONTEXT, rootContext.get(name));
+	}
+
+	@Override
 	public Object read(Map<String, Object> context, Object exprContext) {
 		Object obj = ReflectUtils.getFieldValue(exprContext, name);
+		return readFromList(exprContext, obj);
+	}
+
+	private Object readFromList(Object exprContext, Object obj) {
 		if(obj instanceof List) {
 			return ((List) obj).get(number);
 		} else if(obj.getClass().isArray()) {

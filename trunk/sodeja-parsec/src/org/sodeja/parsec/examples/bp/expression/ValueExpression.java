@@ -10,6 +10,11 @@ public class ValueExpression extends Expression {
 	}
 	
 	@Override
+	public Object read(Map<String, Object> rootContext) {
+		return rootContext.get(name);
+	}
+
+	@Override
 	public Object read(Map<String, Object> rootContext, Object exprContext) {
 		return ReflectUtils.getFieldValue(exprContext, name);
 	}
