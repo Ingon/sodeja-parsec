@@ -2,6 +2,7 @@ package org.sodeja.parsec.examples.bp.expression;
 
 import java.lang.reflect.Array;
 import java.util.List;
+import java.util.Map;
 
 import org.sodeja.lang.reflect.ReflectUtils;
 
@@ -14,15 +15,15 @@ public class ListAccessExpression extends Expression {
 	}
 
 	@Override
-	public Object read(Object context) {
-		Object obj = ReflectUtils.getFieldValue(context, name);
+	public Object read(Map<String, Object> context, Object exprContext) {
+		Object obj = ReflectUtils.getFieldValue(exprContext, name);
 		if(obj instanceof List) {
 			return ((List) obj).get(number);
 		} else if(obj.getClass().isArray()) {
 			return Array.get(obj, number);
 		}
 		
-		throw new IllegalArgumentException("Object with name " + name + " is not valid in " + context);
+		throw new IllegalArgumentException("Object with name " + name + " is not valid in " + exprContext);
 	}
 	
 	@Override

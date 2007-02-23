@@ -1,5 +1,7 @@
 package org.sodeja.parsec.examples.bp.expression;
 
+import java.util.Map;
+
 public abstract class Expression {
 	public final String name;
 
@@ -7,5 +9,9 @@ public abstract class Expression {
 		this.name = name;
 	}
 	
-	public abstract Object read(Object context);
+	public Object read(Map<String, Object> rootContext) {
+		return read(rootContext, rootContext.get(name));
+	}
+	
+	public abstract Object read(Map<String, Object> rootContext, Object exprContext);
 }

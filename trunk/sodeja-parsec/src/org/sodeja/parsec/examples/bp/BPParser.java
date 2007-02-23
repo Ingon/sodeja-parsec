@@ -6,6 +6,7 @@ import org.sodeja.functional.Function1;
 import org.sodeja.functional.Function4;
 import org.sodeja.functional.Pair;
 import org.sodeja.parsec.Parser;
+import org.sodeja.parsec.examples.bp.expression.BeanPath;
 import org.sodeja.parsec.examples.bp.expression.Expression;
 import org.sodeja.parsec.examples.bp.expression.ListAccessExpression;
 import org.sodeja.parsec.examples.bp.expression.MapAccessExpression;
@@ -50,12 +51,21 @@ public class BPParser {
 		alternative1("EXPRESSION_PARSER", 
 				alternative1("LIST_MAP_PARSER", LIST_PARSER, MAP_PARSER), VALUE_PARSER);
 	
-	private Parser<String, List<Expression>> BEAN_PATH_PARSER =
-		oneOrMoreSep("BEAN_PATH_PARSER", EXPRESSION_PARSER, literal("."));
+	private Parser<String, List<Expression>> EXPRESSIONS_PARSER =
+		oneOrMoreSep("EXPRESSIONS_PARSER", EXPRESSION_PARSER, literal("."));
 	
-	public List<Expression> parse(List<String> tokens) {
-		List<Pair<List<Expression>, List<String>>> parseResults = BEAN_PATH_PARSER.execute(tokens);
-		for(Pair<List<Expression>, List<String>> result : parseResults) {
+	private Parser<String, BeanPath> BEAN_PATH_PARSER =
+		apply("BEAN_PATH_PARSER", EXPRESSIONS_PARSER, 
+			new Function1<BeanPath, List<Expression>>() {
+				public BeanPath execute(List<Expression> p) {
+					return new BeanPath(p);
+				}
+			}
+		);
+	
+	public BeanPath parse(List<String> tokens) {
+		List<Pair<BeanPath, List<String>>> parseResults = BEAN_PATH_PARSER.execute(tokens);
+		for(Pair<BeanPath, List<String>> result : parseResults) {
 			if(result.second.isEmpty()) {
 				return result.first;
 			}
