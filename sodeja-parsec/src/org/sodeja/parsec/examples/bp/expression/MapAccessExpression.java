@@ -13,8 +13,17 @@ public class MapAccessExpression extends Expression {
 	}
 
 	@Override
+	public Object read(Map<String, Object> rootContext) {
+		return readFromMap(ROOT_CONTEXT, rootContext.get(name));
+	}
+	
+	@Override
 	public Object read(Map<String, Object> rootContext, Object exprContext) {
 		Object obj = ReflectUtils.getFieldValue(exprContext, name);
+		return readFromMap(exprContext, obj);
+	}
+	
+	private Object readFromMap(Object exprContext, Object obj) {
 		if(obj instanceof Map) {
 			return ((Map) obj).get(element);
 		}

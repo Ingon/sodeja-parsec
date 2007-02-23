@@ -16,6 +16,11 @@ public class ApplyExpression extends Expression {
 		super(name);
 		this.parameters = parameters;
 	}
+	
+	@Override
+	public Object read(Map<String, Object> rootContext) {
+		throw new UnsupportedOperationException("Can't be root!");
+	}
 
 	@Override
 	public Object read(final Map<String, Object> rootContext, final Object exprContext) {
@@ -32,5 +37,21 @@ public class ApplyExpression extends Expression {
 			}});
 		
 		return ReflectUtils.executeMethod(exprContext, name, expectedClasses, executionResults);
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(name);
+		sb.append("(");
+		for(BeanPath bp : parameters) {
+			sb.append(bp);
+			sb.append(", ");
+		}
+		if(sb.length() > 0) {
+			sb.setLength(sb.length() - 2);
+		}
+		sb.append(")");
+		return sb.toString();
 	}
 }

@@ -21,4 +21,17 @@ public class BeanPath {
 		}
 		return temp;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		for(Expression expr : expressions) {
+			sb.append(expr);
+			sb.append(".");
+		}
+		if(sb.length() > 0) {
+			sb.setLength(sb.length() - 1);
+		}
+		return sb.toString();
+	}
 }
