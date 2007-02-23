@@ -45,4 +45,40 @@ public class StandartParsers {
 	public static Parser<String, Integer> simpleIntegerParser(final String name) {
 		return new SimpleIntegerParser(name);
 	}
+	
+	public static Parser<String, String> alpha(final String name) {
+		return new CharByCharSatisfiesParser(name) {
+			@Override
+			protected boolean checkChar(char ch) {
+				return Character.isLetter(ch);
+			}
+		};
+	}
+	
+	public static Parser<String, String> digits(final String name) {
+		return new CharByCharSatisfiesParser(name) {
+			@Override
+			protected boolean checkChar(char ch) {
+				return Character.isDigit(ch);
+			}
+		};
+	}
+
+	public static Parser<String, String> alphaDigits(final String name) {
+		return new CharByCharSatisfiesParser(name) {
+			@Override
+			protected boolean checkChar(char ch) {
+				return Character.isLetterOrDigit(ch);
+			}
+		};
+	}
+
+	public static Parser<String, String> alphaDigitsUnderscore(final String name) {
+		return new CharByCharSatisfiesParser(name) {
+			@Override
+			protected boolean checkChar(char ch) {
+				return Character.isLetterOrDigit(ch) || (ch == '_');
+			}
+		};
+	}
 }

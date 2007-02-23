@@ -3,7 +3,9 @@ package org.sodeja.parsec.examples.script;
 import java.io.StringReader;
 import java.util.List;
 
-public class Script {
+import org.sodeja.parsec.examples.script.model.Script;
+
+public class ScriptMain {
 	public static void main(String[] args) {
 		String target = "  # What to do in the morning\r\n"
 				+ "morning {\r\n"
@@ -17,5 +19,10 @@ public class Script {
 		List<String> tokens = lexer.tokenize();
 		
 		System.out.println("Result: " + tokens);
+		
+		ScriptParser parser = new ScriptParser();
+		Script script = parser.parse(tokens);
+		
+		System.out.println("Script: " + script);
 	}
 }
