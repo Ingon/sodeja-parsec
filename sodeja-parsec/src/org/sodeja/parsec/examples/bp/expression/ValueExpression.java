@@ -1,5 +1,7 @@
 package org.sodeja.parsec.examples.bp.expression;
 
+import java.util.Map;
+
 import org.sodeja.lang.reflect.ReflectUtils;
 
 public class ValueExpression extends Expression {
@@ -8,8 +10,8 @@ public class ValueExpression extends Expression {
 	}
 	
 	@Override
-	public Object read(Object context) {
-		return ReflectUtils.getFieldValue(context, name);
+	public Object read(Map<String, Object> rootContext, Object exprContext) {
+		return ReflectUtils.getFieldValue(exprContext, name);
 	}
 
 	@Override

@@ -6,11 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.sodeja.parsec.examples.bp.expression.Expression;
+import org.sodeja.parsec.examples.bp.expression.BeanPath;
 
-public class BeanPath {
+public class BeanPathMain {
 	public static void main(String[] args) {
-		String path = "a.b[1].c{iuhu}";
+		String path = "a(d, e).b[1].c{iuhu}";
 		
 		BPLexer lexer = new BPLexer(new StringReader(path));
 		List<String> tokens = lexer.tokenize();
@@ -18,19 +18,11 @@ public class BeanPath {
 		System.out.println("Tokens: " + tokens);
 		
 		BPParser parser = new BPParser();
-		List<Expression> expressions = parser.parse(tokens);
+		BeanPath bp = parser.parse(tokens);
 		
-		System.out.println("Expressions: " + expressions);
+		System.out.println("Expressions: " + bp);
 		
-		System.out.println("Read: " + read(new One(), expressions));
-	}
-	
-	public static Object read(Object root, List<Expression> expressions) {
-		Object temp = root;
-		for(Expression expression : expressions) {
-			temp = expression.read(temp);
-		}
-		return temp;
+//		System.out.println("Read: " + read(new One(), expressions));
 	}
 	
 	private static class One {

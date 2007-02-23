@@ -13,13 +13,13 @@ public class MapAccessExpression extends Expression {
 	}
 
 	@Override
-	public Object read(Object context) {
-		Object obj = ReflectUtils.getFieldValue(context, name);
+	public Object read(Map<String, Object> rootContext, Object exprContext) {
+		Object obj = ReflectUtils.getFieldValue(exprContext, name);
 		if(obj instanceof Map) {
 			return ((Map) obj).get(element);
 		}
 		
-		throw new IllegalArgumentException("Object with name " + name + " is not valid in " + context);
+		throw new IllegalArgumentException("Object with name " + name + " is not valid in " + exprContext);
 	}
 	
 	@Override
