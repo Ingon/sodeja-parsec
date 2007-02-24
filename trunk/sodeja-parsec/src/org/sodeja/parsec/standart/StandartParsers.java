@@ -8,6 +8,10 @@ public class StandartParsers {
 	private StandartParsers() {
 	}
 	
+	public static Parser<String, String> justString(final String name) {
+		return new StringParser(name);
+	}
+	
 	public static Parser<String, String> literal(final String match) {
 		return new SatisfiesParser<String>(match + "_PARSER", new Predicate1<String>() {
 			public Boolean execute(String p) {
