@@ -3,10 +3,10 @@ package org.sodeja.parsec.examples.bp.model;
 import java.util.List;
 
 public class BeanPath {
-	public final PathElement start;
-	public final List<PathElement> rest;
+	public final Expression start;
+	public final List<Expression> rest;
 	
-	public BeanPath(final PathElement start, final List<PathElement> rest) {
+	public BeanPath(final Expression start, final List<Expression> rest) {
 		this.start = start;
 		this.rest = rest;
 	}
@@ -15,7 +15,7 @@ public class BeanPath {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(start);
-		for(PathElement el : rest) {
+		for(Expression el : rest) {
 			sb.append(".");
 			sb.append(el);
 		}
