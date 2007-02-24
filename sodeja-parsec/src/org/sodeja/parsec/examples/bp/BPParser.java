@@ -8,9 +8,9 @@ import static org.sodeja.parsec.ParsecUtils.thenParser3;
 import static org.sodeja.parsec.ParsecUtils.thenParser4;
 import static org.sodeja.parsec.ParsecUtils.zeroOrMore;
 import static org.sodeja.parsec.standart.StandartParsers.alphaDigitsUnderscore;
+import static org.sodeja.parsec.standart.StandartParsers.justString;
 import static org.sodeja.parsec.standart.StandartParsers.literal;
 import static org.sodeja.parsec.standart.StandartParsers.simpleIntegerParser;
-import static org.sodeja.parsec.standart.StandartParsers.justString;
 
 import java.util.List;
 
@@ -29,7 +29,6 @@ import org.sodeja.parsec.examples.bp.model.MapAccess;
 import org.sodeja.parsec.examples.bp.model.Method;
 import org.sodeja.parsec.examples.bp.model.MethodAccesses;
 import org.sodeja.parsec.examples.bp.model.NumberExpression;
-import org.sodeja.parsec.examples.bp.model.PathElement;
 import org.sodeja.parsec.examples.bp.model.Property;
 import org.sodeja.parsec.examples.bp.model.PropertyAccesses;
 import org.sodeja.parsec.examples.bp.model.StringExpression;
@@ -113,29 +112,17 @@ public class BPParser {
 	private Parser<String, Expression> METHOD_PROPERTY_ACCESS =
 		alternative1("METHOD_PROPERTY_ACCESS", METHOD_ACCESS, PROPERTY_ACCESS);
 	
-	// TODO extends to handle numbers/strings
 	private Parser<String, Expression> START_EXPRESSION =
 		alternative1("START_EXPRESSION", PRIMITIVE_EXPRESSION, PROPERTY_ACCESS);
 	
-	private Parser<String, PathElement> PATH_START = 
-		apply("PATH_START", START_EXPRESSION, new Function1<PathElement, Expression>() {
-			public PathElement execute(Expression p) {
-				return new PathElement(p);
-			}});
-	
-	private Parser<String, PathElement> PATH_ELEMENT =
-		apply("PATH_ELEMENT", METHOD_PROPERTY_ACCESS, new Function1<PathElement, Expression>() {
-			public PathElement execute(Expression p) {
-				return new PathElement(p);
-			}});
-	
-	private Parser<String, List<PathElement>> PATH_ELEMENTS =
-		zeroOrMore("PATH_ELEMENTS", thenParser("PATH_ELEMENTS_W.", literal("."), PATH_ELEMENT, Function2.Utils.justSecond(String.class, PathElement.class)));
+	private Parser<String, List<Expression>> PATH_ELEMENTS =
+		zeroOrMore("PATH_ELEMENTS", thenParser("PATH_ELEMENTS_WITH_.", literal("."), METHOD_PROPERTY_ACCESS, 
+				Function2.Utils.justSecond(String.class, Expression.class)));
 
 	public BPParser() {
-		BEAN_PATH.delegate = thenParser("BEAN_PATH_DELEGATE", PATH_START, PATH_ELEMENTS, 
-				new Function2<BeanPath, PathElement, List<PathElement>>() {
-					public BeanPath execute(PathElement p1, List<PathElement> p2) {
+		BEAN_PATH.delegate = thenParser("BEAN_PATH_DELEGATE", START_EXPRESSION, PATH_ELEMENTS, 
+				new Function2<BeanPath, Expression, List<Expression>>() {
+					public BeanPath execute(Expression p1, List<Expression> p2) {
 						return new BeanPath(p1, p2);
 					}});
 	}
