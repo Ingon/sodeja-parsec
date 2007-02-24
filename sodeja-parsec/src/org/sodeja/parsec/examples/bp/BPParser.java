@@ -10,6 +10,7 @@ import static org.sodeja.parsec.ParsecUtils.zeroOrMore;
 import static org.sodeja.parsec.standart.StandartParsers.alphaDigitsUnderscore;
 import static org.sodeja.parsec.standart.StandartParsers.literal;
 import static org.sodeja.parsec.standart.StandartParsers.simpleIntegerParser;
+import static org.sodeja.parsec.standart.StandartParsers.justString;
 
 import java.util.List;
 
@@ -27,9 +28,11 @@ import org.sodeja.parsec.examples.bp.model.ListAccess;
 import org.sodeja.parsec.examples.bp.model.MapAccess;
 import org.sodeja.parsec.examples.bp.model.Method;
 import org.sodeja.parsec.examples.bp.model.MethodAccesses;
+import org.sodeja.parsec.examples.bp.model.NumberExpression;
 import org.sodeja.parsec.examples.bp.model.PathElement;
 import org.sodeja.parsec.examples.bp.model.Property;
 import org.sodeja.parsec.examples.bp.model.PropertyAccesses;
+import org.sodeja.parsec.examples.bp.model.StringExpression;
 
 public class BPParser {
 	
@@ -43,6 +46,23 @@ public class BPParser {
 	
 	private Parser<String, Integer> NUMBER = simpleIntegerParser("NUMBER");
 	
+	private Parser<String, NumberExpression> NUMBER_EXPRESSION = 
+		apply("NUMBER_EXPRESSION", NUMBER, 
+			new Function1<NumberExpression, Integer>() {
+				public NumberExpression execute(Integer p) {
+					return new NumberExpression(p);
+				}});
+	
+	private Parser<String, StringExpression> STRING_EXPRESSION =
+		apply("STRING_EXPRESSION", justString("STRING_EXPRESSION_INT"),
+			new Function1<StringExpression, String>() {
+				public StringExpression execute(String p) {
+					return new StringExpression(p);
+				}});
+	
+	private Parser<String, Expression> PRIMITIVE_EXPRESSION =
+		alternative1("PRIMITIVE_EXPRESSION", NUMBER_EXPRESSION, STRING_EXPRESSION);
+	
 	private Parser<String, ListAccess> LIST_ACCESS = 
 		thenParser3("LIST_ACCESS", literal("["), NUMBER, literal("]"), 
 			new Function3<ListAccess, String, Integer, String>() {
@@ -50,11 +70,10 @@ public class BPParser {
 					return new ListAccess(p2);
 				}});
 	
-	// TODO this should parse BP
 	private Parser<String, MapAccess> MAP_ACCESS =
-		thenParser3("MAP_ACCESS", literal("{"), NAME, literal("}"), 
-			new Function3<MapAccess, String, String, String>() {
-				public MapAccess execute(String p1, String p2, String p3) {
+		thenParser3("MAP_ACCESS", literal("{"), BEAN_PATH, literal("}"), 
+			new Function3<MapAccess, String, BeanPath, String>() {
+				public MapAccess execute(String p1, BeanPath p2, String p3) {
 					return new MapAccess(p2);
 				}});
 	
@@ -95,9 +114,12 @@ public class BPParser {
 		alternative1("METHOD_PROPERTY_ACCESS", METHOD_ACCESS, PROPERTY_ACCESS);
 	
 	// TODO extends to handle numbers/strings
+	private Parser<String, Expression> START_EXPRESSION =
+		alternative1("START_EXPRESSION", PRIMITIVE_EXPRESSION, PROPERTY_ACCESS);
+	
 	private Parser<String, PathElement> PATH_START = 
-		apply("PATH_START", PROPERTY_ACCESS, new Function1<PathElement, PropertyAccesses>() {
-			public PathElement execute(PropertyAccesses p) {
+		apply("PATH_START", START_EXPRESSION, new Function1<PathElement, Expression>() {
+			public PathElement execute(Expression p) {
 				return new PathElement(p);
 			}});
 	

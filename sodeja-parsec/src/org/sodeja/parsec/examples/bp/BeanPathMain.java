@@ -59,10 +59,10 @@ public class BeanPathMain {
 		
 		System.out.println("Tokens: " + tokens);
 		
-//		BPParser parser = new BPParser();
-//		BeanPath bp = parser.parse(tokens);
-//		
-//		System.out.println("Expressions: " + bp);
+		BPParser parser = new BPParser();
+		BeanPath bp = parser.parse(tokens);
+		
+		System.out.println("Expressions: " + bp);
 		
 //		Map<String, Object> ctx = new HashMap<String, Object>();
 //		ctx.put("a", new One());
