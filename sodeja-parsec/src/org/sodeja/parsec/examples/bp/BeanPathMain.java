@@ -65,12 +65,12 @@ public class BeanPathMain {
 		
 		System.out.println("Expressions: " + bp);
 		
-//		Map<String, Object> ctx = new HashMap<String, Object>();
-//		ctx.put("a", new One());
-//		ctx.put("d", "DDDDDDDDDDDDDD");
-//		ctx.put("e", "EEEEEEEEEEEEEE");
-//		
-//		System.out.println("Result: " + bp.read(ctx));
+		Map<String, Object> ctx = new HashMap<String, Object>();
+		ctx.put("a", new One());
+		ctx.put("d", "DDDDDDDDDDDDDD");
+		ctx.put("e", "EEEEEEEEEEEEEE");
+		
+		System.out.println("Result: " + bp.read(ctx));
 	}
 	
 	private static class One {
