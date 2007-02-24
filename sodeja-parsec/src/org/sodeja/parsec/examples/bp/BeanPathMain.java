@@ -6,10 +6,52 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.sodeja.parsec.examples.bp.expression.BeanPath;
+import org.sodeja.collections.ListUtils;
+import org.sodeja.parsec.examples.bp.model.BeanPath;
 
 public class BeanPathMain {
 	public static void main(String[] args) {
+//		BPParser test = new BPParser();
+//		
+//		BeanPath path = test.parse(ListUtils.asList("a"));
+//		System.out.println(path);
+//		
+//		path = test.parse(ListUtils.asList("a", "[", "1", "]"));
+//		System.out.println(path);
+//		
+//		path = test.parse(ListUtils.asList("a", "{", "dsa", "}"));
+//		System.out.println(path);
+//		
+//		path = test.parse(ListUtils.asList("a", "[", "1", "]", "{", "dsa", "}"));
+//		System.out.println(path);
+//
+//		path = test.parse(ListUtils.asList("a", "{", "dsa", "}", "[", "1", "]"));
+//		System.out.println(path);
+//		
+//		path = test.parse(ListUtils.asList("a", ".", "b"));
+//		System.out.println(path);
+//
+//		path = test.parse(ListUtils.asList("a", ".", "b", "[", "1", "]"));
+//		System.out.println(path);
+//
+//		path = test.parse(ListUtils.asList("a", ".", "b", "{", "dsa", "}"));
+//		System.out.println(path);
+//
+//		path = test.parse(ListUtils.asList("a", ".", "b", "[", "1", "]", "{", "dsa", "}"));
+//		System.out.println(path);
+//
+//		path = test.parse(ListUtils.asList("a", ".", "b", "{", "dsa", "}", "[", "1", "]"));
+//		System.out.println(path);
+//
+//		path = test.parse(ListUtils.asList("a", ".", "b", "(", "dsa", ")"));
+//		System.out.println(path);
+//
+//		path = test.parse(ListUtils.asList("a", ".", "b", "(", "dsa", ")", "[", "1", "]"));
+//		System.out.println(path);
+//
+//		path = test.parse(ListUtils.asList("a", ".", "b", "(", "dsa", ")", "{", "absd", "}"));
+//		System.out.println(path);
+		
 		String path = "a.a(d, e).b[1].c{iuhu}";
 		
 		BPLexer lexer = new BPLexer(new StringReader(path));
@@ -22,12 +64,12 @@ public class BeanPathMain {
 		
 		System.out.println("Expressions: " + bp);
 		
-		Map<String, Object> ctx = new HashMap<String, Object>();
-		ctx.put("a", new One());
-		ctx.put("d", "DDDDDDDDDDDDDD");
-		ctx.put("e", "EEEEEEEEEEEEEE");
-		
-		System.out.println("Result: " + bp.read(ctx));
+//		Map<String, Object> ctx = new HashMap<String, Object>();
+//		ctx.put("a", new One());
+//		ctx.put("d", "DDDDDDDDDDDDDD");
+//		ctx.put("e", "EEEEEEEEEEEEEE");
+//		
+//		System.out.println("Result: " + bp.read(ctx));
 	}
 	
 	private static class One {
