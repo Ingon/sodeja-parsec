@@ -1,14 +1,14 @@
 package org.sodeja.parsec.examples.bp.model;
 
 public class MapAccess implements Access {
-	public final String name;
+	public final BeanPath path;
 	
-	public MapAccess(final String name) {
-		this.name = name;
+	public MapAccess(final BeanPath path) {
+		this.path = path;
 	}
 
 	@Override
 	public String toString() {
-		return "{" + name + "}";
+		return "{" + path + "}";
 	}
 }
