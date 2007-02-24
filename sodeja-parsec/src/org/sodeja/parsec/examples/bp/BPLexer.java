@@ -32,6 +32,11 @@ public class BPLexer extends AbstractLexer<String> {
 			return;
 		}
 		
+		if(ch == '\"') {
+			LexerHelper.readString(this, ch);
+			return;
+		}
+		
 		tokens.add(String.valueOf(ch));
 	}
 }

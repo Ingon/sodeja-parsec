@@ -52,17 +52,17 @@ public class BeanPathMain {
 //		path = test.parse(ListUtils.asList("a", ".", "b", "(", "dsa", ")", "{", "absd", "}"));
 //		System.out.println(path);
 		
-		String path = "a.a(d, e).b[1].c{iuhu}";
+		String path = "a.a(d, e).b[1].c{\"iuhu\"}";
 		
 		BPLexer lexer = new BPLexer(new StringReader(path));
 		List<String> tokens = lexer.tokenize();
 		
 		System.out.println("Tokens: " + tokens);
 		
-		BPParser parser = new BPParser();
-		BeanPath bp = parser.parse(tokens);
-		
-		System.out.println("Expressions: " + bp);
+//		BPParser parser = new BPParser();
+//		BeanPath bp = parser.parse(tokens);
+//		
+//		System.out.println("Expressions: " + bp);
 		
 //		Map<String, Object> ctx = new HashMap<String, Object>();
 //		ctx.put("a", new One());
