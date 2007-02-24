@@ -14,6 +14,12 @@ public class ZeroOrMoreParser<Tok, Res> extends AbstractParser<Tok, List<Res>> {
 		this.internal = internal;
 	}
 
+	// TODO is this ok ?
+	@Override
+	public List<Pair<List<Res>, List<Tok>>> execute(List<Tok> tokens) {
+		return executeDelegate(tokens);
+	}
+
 	// TODO refactor to use OneOrMoreParser + EmptyParser
 	@Override
 	protected List<Pair<List<Res>, List<Tok>>> executeDelegate(List<Tok> tokens) {
