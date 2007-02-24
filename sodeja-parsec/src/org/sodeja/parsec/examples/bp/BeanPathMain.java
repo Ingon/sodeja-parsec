@@ -52,7 +52,8 @@ public class BeanPathMain {
 //		path = test.parse(ListUtils.asList("a", ".", "b", "(", "dsa", ")", "{", "absd", "}"));
 //		System.out.println(path);
 		
-		String path = "a.a(d, e).b[1].c{\"iuhu\"}";
+//		String path = "a.a(d, e).b[1].c{\"iuhu\"}";
+		String path = "\"juuuuuuji\".substring(1)";
 		
 		BPLexer lexer = new BPLexer(new StringReader(path));
 		List<String> tokens = lexer.tokenize();
