@@ -23,6 +23,10 @@ public class ParsecUtils {
 		return new ZeroOrMoreParser<Tok, Res>(name, parser);
 	}
 	
+	public static <Tok, Res> Parser<Tok, Res> zeroOrOne(String name, Parser<Tok, Res> parser) {
+		return new ZeroOrOneParser<Tok, Res>(name, parser);
+	}
+	
 	public static <Tok, Res, Res1> Parser<Tok, Res> apply(String name, Parser<Tok, Res1> parser, Function1<Res, Res1> functor) {
 		return new ApplyParser<Tok, Res, Res1>(name, parser, functor);
 	}
