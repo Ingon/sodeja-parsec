@@ -69,7 +69,7 @@ public class BPParser {
 					return new ListAccess(p2);
 				}});
 	
-	private Parser<String, MapAccess> MAP_ACCESS =
+	private Parser<String, MapAccess> MAP_ACCESS = 
 		thenParser3("MAP_ACCESS", literal("{"), BEAN_PATH, literal("}"), 
 			new Function3<MapAccess, String, BeanPath, String>() {
 				public MapAccess execute(String p1, BeanPath p2, String p3) {
@@ -82,7 +82,7 @@ public class BPParser {
 				return new Property(p);
 			}});
 
-	private Parser<String, Method> METHOD =
+	private Parser<String, Method> METHOD = 
 		thenParser4("METHOD", NAME, literal("("), BEAN_PATHS, literal(")"), 
 			new Function4<Method, String, String, List<BeanPath>, String>() {
 				public Method execute(String p1, String p2, List<BeanPath> p3, String p4) {
