@@ -1,6 +1,8 @@
 package org.sodeja.parsec.examples.lisp.executor;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.sodeja.parsec.examples.lisp.model.SExpression;
 
@@ -17,7 +19,15 @@ public class LispProcedure implements Procedure {
 	}
 
 	@Override
-	public Object execute(Object... vals) {
-		return null;
+	public Object execute(final Object... vals) {
+		Map<String, Object> paramsMapping = new HashMap<String, Object>() {
+			private static final long serialVersionUID = 7740081972870762415L;
+		{
+			for(int i = 0, n = params.size();i < n;i++) {
+				put(params.get(i), vals[i]);
+			}
+		}};
+		Frame thisFrame = new Frame(frame, paramsMapping);
+		return thisFrame.apply(body);
 	}
 }

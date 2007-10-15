@@ -10,7 +10,7 @@ import org.sodeja.parsec.examples.lisp.model.SExpression;
 
 public class LambdaForm implements Form {
 	@Override
-	public Object execute(LispExecutor executor, List<Expression> expressions) {
+	public Object execute(Frame frame, List<Expression> expressions) {
 		// TODO check for errors
 		
 		SExpression paramsExp = (SExpression) expressions.get(0);
@@ -22,6 +22,6 @@ public class LambdaForm implements Form {
 				return ((NameExpression) p).name;
 			}}); 
 		
-		return new LispProcedure(executor.getFrame(), params, body);
+		return new LispProcedure(frame, params, body);
 	}
 }
