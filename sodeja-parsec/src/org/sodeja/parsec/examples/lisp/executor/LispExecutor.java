@@ -5,7 +5,13 @@ import java.util.Map;
 
 import org.sodeja.collections.ListUtils;
 import org.sodeja.functional.VFunction1;
-import org.sodeja.parsec.examples.lisp.model.SExpression;
+import org.sodeja.parsec.examples.lisp.executor.form.DefineForm;
+import org.sodeja.parsec.examples.lisp.executor.form.LambdaForm;
+import org.sodeja.parsec.examples.lisp.executor.primitive.DivProcedure;
+import org.sodeja.parsec.examples.lisp.executor.primitive.MulProcedure;
+import org.sodeja.parsec.examples.lisp.executor.primitive.SubProcedure;
+import org.sodeja.parsec.examples.lisp.executor.primitive.SumProcedure;
+import org.sodeja.parsec.examples.lisp.model.Expression;
 import org.sodeja.parsec.examples.lisp.model.Script;
 
 public class LispExecutor {
@@ -21,6 +27,8 @@ public class LispExecutor {
 			
 			put("+", new SumProcedure());
 			put("-", new SubProcedure());
+			put("*", new MulProcedure());
+			put("/", new DivProcedure());
 		}};
 		
 		frame = new Frame(null, procedures);
@@ -31,11 +39,11 @@ public class LispExecutor {
 	}
 	
 	public void execute(final Script script) {
-		ListUtils.execute(script.expressions, new VFunction1<SExpression>() {
+		ListUtils.execute(script.expressions, new VFunction1<Expression>() {
 			@Override
-			public void executeV(SExpression p) {
-				System.out.println(p);
-				System.out.println(frame.apply(p));
+			public void executeV(Expression p) {
+				System.out.println("=> " + p);
+				System.out.println(frame.eval(p));
 			}});
 	}
 }

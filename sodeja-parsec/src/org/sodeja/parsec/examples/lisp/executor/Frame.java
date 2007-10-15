@@ -6,8 +6,9 @@ import java.util.Map;
 
 import org.sodeja.collections.ListUtils;
 import org.sodeja.functional.Function1;
+import org.sodeja.parsec.examples.lisp.executor.form.Form;
 import org.sodeja.parsec.examples.lisp.model.Expression;
-import org.sodeja.parsec.examples.lisp.model.NameExpression;
+import org.sodeja.parsec.examples.lisp.model.SymbolExpression;
 import org.sodeja.parsec.examples.lisp.model.NumberExpression;
 import org.sodeja.parsec.examples.lisp.model.SExpression;
 
@@ -33,7 +34,7 @@ public class Frame {
 		this.objects = objects;
 	}
 	
-	public Object getSymbolValue(String symbol) {
+	protected Object getSymbolValue(String symbol) {
 		Object value = objects.get(symbol);
 		if(value != null) {
 			return value;
@@ -41,7 +42,7 @@ public class Frame {
 		return parent.getSymbolValue(symbol);
 	}
 	
-	public boolean containsSymbol(String symbol) {
+	protected boolean containsSymbol(String symbol) {
 		if(objects.containsKey(symbol)) {
 			return true;
 		}
@@ -55,7 +56,7 @@ public class Frame {
 		objects.put(symbol, value);
 	}
 	
-	protected Object apply(final SExpression exp) {
+	public Object apply(final SExpression exp) {
 		Executable exec = evalExec(ListUtils.head(exp.expressions));
 		List<Expression> params = ListUtils.tail(exp.expressions);
 		
@@ -77,20 +78,20 @@ public class Frame {
 				return eval(p);
 			}});
 		
-		return procedure.execute(ListUtils.asArray(args));
+		return procedure.execute(args.toArray(new Object[args.size()]));
 	}
 	
 	protected Executable evalExec(final Expression exp) {
 		return (Executable) eval(exp);
 	}
 	
-	protected Object eval(final Expression exp) {
+	public Object eval(final Expression exp) {
 		if(exp instanceof NumberExpression) {
 			return ((NumberExpression) exp).value;
 		} 
 
-		if(exp instanceof NameExpression) {
-			String symbol = ((NameExpression) exp).name;
+		if(exp instanceof SymbolExpression) {
+			String symbol = ((SymbolExpression) exp).name;
 			return getSymbolValue(symbol);
 		} 
 

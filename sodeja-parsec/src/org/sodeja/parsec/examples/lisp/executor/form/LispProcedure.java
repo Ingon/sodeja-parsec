@@ -1,9 +1,11 @@
-package org.sodeja.parsec.examples.lisp.executor;
+package org.sodeja.parsec.examples.lisp.executor.form;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.sodeja.parsec.examples.lisp.executor.Frame;
+import org.sodeja.parsec.examples.lisp.executor.Procedure;
 import org.sodeja.parsec.examples.lisp.model.SExpression;
 
 public class LispProcedure implements Procedure {

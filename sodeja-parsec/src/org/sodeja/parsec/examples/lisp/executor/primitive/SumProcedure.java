@@ -1,4 +1,5 @@
-package org.sodeja.parsec.examples.lisp.executor;
+package org.sodeja.parsec.examples.lisp.executor.primitive;
+
 
 public class SumProcedure implements PrimitiveProcedure {
 	@Override

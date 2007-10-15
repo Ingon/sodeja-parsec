@@ -63,10 +63,12 @@ public class LexerHelper {
 		lexer.helper.append(initial);
 		
 		Character ch = null;
-		for(ch = lexer.readChar(); !Character.isWhitespace(ch) && ch!=')'; ch = lexer.readChar()) {
+		for(ch = lexer.readChar(); ch != null && !Character.isWhitespace(ch) && ch!=')'; ch = lexer.readChar()) {
 			lexer.helper.append(ch);
 		}
-		lexer.unreadChar(ch);
+		if(ch != null) {
+			lexer.unreadChar(ch);
+		}
 		
 		lexer.tokens.add(lexer.createTokenFrom(lexer.helper.toString()));
 	}

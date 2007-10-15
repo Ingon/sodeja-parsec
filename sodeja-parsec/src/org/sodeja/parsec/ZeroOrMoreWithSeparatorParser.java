@@ -29,6 +29,7 @@ public class ZeroOrMoreWithSeparatorParser<Tok, Res, Res1> extends AbstractParse
 			return result;
 		}
 		
+		// FIXME should inspect all possible results
 		results.add(internalResult.get(0).first);
 		tempTokens = internalResult.get(0).second;
 		
