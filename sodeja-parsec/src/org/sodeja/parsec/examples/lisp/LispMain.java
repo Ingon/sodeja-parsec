@@ -9,7 +9,8 @@ import org.sodeja.parsec.examples.lisp.model.Script;
 public class LispMain {
 	public static void main(String[] args) {
 //		String expression = "(+ 3 32) (- 3) (- 4 6 3)";
-		String expression = "(def x 3) (def y 6) (+ x y)";
+//		String expression = "(def x 3) (def y 6) (+ x y)";
+		String expression = "(\\ (a) b)";
 		LispLexer lexer = new LispLexer(new StringReader(expression));
 		List<String> tokens = lexer.tokenize();
 //		System.out.println(tokens);

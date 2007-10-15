@@ -1,7 +1,15 @@
 package org.sodeja.parsec.examples.lisp.executor;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import org.sodeja.collections.ListUtils;
+import org.sodeja.functional.Function1;
+import org.sodeja.parsec.examples.lisp.model.Expression;
+import org.sodeja.parsec.examples.lisp.model.NameExpression;
+import org.sodeja.parsec.examples.lisp.model.NumberExpression;
+import org.sodeja.parsec.examples.lisp.model.SExpression;
 
 public class Frame {
 	protected final Frame parent;
@@ -47,6 +55,52 @@ public class Frame {
 		objects.put(symbol, value);
 	}
 	
+	protected Object apply(final SExpression exp) {
+		Executable exec = evalExec(ListUtils.head(exp.expressions));
+		List<Expression> params = ListUtils.tail(exp.expressions);
+		
+		if(exec instanceof Procedure) {
+			return applyProcedure((Procedure) exec, params);
+		}
+		
+		if(exec instanceof Form) {
+			return ((Form) exec).execute(this, params);
+		}
+		
+		throw new IllegalArgumentException("Unknown procedure type");
+	}
+	
+	protected Object applyProcedure(final Procedure procedure, final List<Expression> subexpressions) {
+		List<Object> args = ListUtils.map(subexpressions, new Function1<Object, Expression>() {
+			@Override
+			public Object execute(Expression p) {
+				return eval(p);
+			}});
+		
+		return procedure.execute(ListUtils.asArray(args));
+	}
+	
+	protected Executable evalExec(final Expression exp) {
+		return (Executable) eval(exp);
+	}
+	
+	protected Object eval(final Expression exp) {
+		if(exp instanceof NumberExpression) {
+			return ((NumberExpression) exp).value;
+		} 
+
+		if(exp instanceof NameExpression) {
+			String symbol = ((NameExpression) exp).name;
+			return getSymbolValue(symbol);
+		} 
+
+		if(exp instanceof SExpression){
+			return apply(((SExpression) exp));
+		}
+		
+		throw new IllegalArgumentException("Unknown expression");
+	}
+
 	private static class NullFrame extends Frame {
 		@Override
 		public boolean containsSymbol(String symbol) {
