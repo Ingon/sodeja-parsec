@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.sodeja.collections.ArrayUtils;
+import org.sodeja.collections.CollectionUtils;
 import org.sodeja.collections.ListUtils;
 import org.sodeja.functional.Function1;
+import org.sodeja.functional.VFunction1;
 import org.sodeja.lang.reflect.ReflectUtils;
 
 public class Method implements Expression {
@@ -39,14 +41,17 @@ public class Method implements Expression {
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		sb.append(name);
 		sb.append("(");
-		for(BeanPath bp : params) {
-			sb.append(bp);
-			sb.append(", ");
-		}
-		if(params.size() > 0) {
+		ListUtils.execute(params, new VFunction1<BeanPath>() {
+			@Override
+			public void executeV(BeanPath p) {
+				sb.append(p);
+				sb.append(", ");
+			}
+		});
+		if(! CollectionUtils.isEmpty(params)) {
 			sb.setLength(sb.length() - 2);
 		}
 		sb.append(")");
