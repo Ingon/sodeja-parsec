@@ -1,6 +1,6 @@
 package org.sodeja.parsec.examples.lisp.executor;
 
-public class SubProcedure implements Procedure {
+public class SubProcedure implements PrimitiveProcedure {
 	@Override
 	public Object execute(Object... vals) {
 		long sub = ((Number) vals[0]).longValue();

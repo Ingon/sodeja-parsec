@@ -1,6 +1,6 @@
 package org.sodeja.parsec.examples.lisp.executor;
 
-public class SumProcedure implements Procedure {
+public class SumProcedure implements PrimitiveProcedure {
 	@Override
 	public Object execute(Object... vals) {
 		long sum = 0;

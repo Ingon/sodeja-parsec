@@ -21,10 +21,11 @@ public class LispExecutor {
 		final Map<String, Object> procedures = new HashMap<String, Object>() {
 			private static final long serialVersionUID = -6084661181815911365L;
 		{
+			put("\\", new LambdaForm());
+			put("def", new DefineForm());
+			
 			put("+", new SumProcedure());
 			put("-", new SubProcedure());
-			
-			put("def", new DefineForm());
 		}};
 		
 		frame = new Frame(null, procedures);
