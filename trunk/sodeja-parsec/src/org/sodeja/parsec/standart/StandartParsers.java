@@ -12,6 +12,14 @@ public class StandartParsers {
 		return new StringParser(name);
 	}
 	
+	public static Parser<String, String> justText(final String name) {
+		return new SatisfiesParser<String>(name + "_PARSER", new Predicate1<String>() {
+			public Boolean execute(String p) {
+				return true;
+			}
+		});
+	}
+	
 	public static Parser<String, String> literal(final String match) {
 		return new SatisfiesParser<String>(match + "_PARSER", new Predicate1<String>() {
 			public Boolean execute(String p) {
