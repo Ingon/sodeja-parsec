@@ -8,10 +8,10 @@ public class MulProcedure implements PrimitiveProcedure {
 	public Object execute(Object... vals) {
 		BigInteger prod = BigInteger.valueOf(1);
 		for(Object obj : vals) {
-			if(obj instanceof Integer || obj instanceof Long) {
-				prod = prod.multiply(BigInteger.valueOf(((Number) obj).longValue()));
-			} else if(obj instanceof BigInteger) {
+			if(obj instanceof BigInteger) {
 				prod = prod.multiply((BigInteger) obj);
+			} else {
+				throw new IllegalArgumentException("Wrong value type: " + obj.getClass());
 			}
 		}
 		return prod;

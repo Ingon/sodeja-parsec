@@ -25,10 +25,7 @@ public class LispLexer extends AbstractLexer<String> {
 			return;
 		}
 
-		if(Character.isDigit(ch)) {
-			LexerHelper.readNumberToken(this, ch);
-			return;
-		} else if(Character.isLetter(ch)) {
+		if(Character.isDigit(ch) || Character.isLetter(ch)) {
 			LexerHelper.readIdentifierS(this, ch);
 			return;
 		}

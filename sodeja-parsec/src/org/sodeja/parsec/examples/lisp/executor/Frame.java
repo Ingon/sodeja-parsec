@@ -7,9 +7,10 @@ import java.util.Map;
 import org.sodeja.collections.ListUtils;
 import org.sodeja.functional.Function1;
 import org.sodeja.parsec.examples.lisp.executor.form.Form;
+import org.sodeja.parsec.examples.lisp.model.BigDecimalExpression;
 import org.sodeja.parsec.examples.lisp.model.Expression;
 import org.sodeja.parsec.examples.lisp.model.SymbolExpression;
-import org.sodeja.parsec.examples.lisp.model.NumberExpression;
+import org.sodeja.parsec.examples.lisp.model.BigIntegerExpression;
 import org.sodeja.parsec.examples.lisp.model.SExpression;
 
 public class Frame {
@@ -86,9 +87,13 @@ public class Frame {
 	}
 	
 	public Object eval(final Expression exp) {
-		if(exp instanceof NumberExpression) {
-			return ((NumberExpression) exp).value;
+		if(exp instanceof BigIntegerExpression) {
+			return ((BigIntegerExpression) exp).value;
 		} 
+		
+		if(exp instanceof BigDecimalExpression) {
+			return ((BigDecimalExpression) exp).value;
+		}
 
 		if(exp instanceof SymbolExpression) {
 			String symbol = ((SymbolExpression) exp).name;
