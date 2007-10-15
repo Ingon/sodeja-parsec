@@ -1,9 +1,9 @@
 package org.sodeja.parsec.examples.lisp.model;
 
-public class NumberExpression implements SimpleExpression {
-	public final Integer value;
+public class NumberExpression<T extends Number> implements SimpleExpression {
+	public final T value;
 	
-	public NumberExpression(Integer value) {
+	public NumberExpression(T value) {
 		this.value = value;
 	}
 

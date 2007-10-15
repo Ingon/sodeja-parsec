@@ -1,13 +1,16 @@
 package org.sodeja.parsec.examples.lisp.executor.primitive;
 
+import java.math.BigInteger;
 
 public class SumProcedure implements PrimitiveProcedure {
 	@Override
 	public Object execute(Object... vals) {
-		long sum = 0;
+		BigInteger sum = BigInteger.valueOf(0);
 		for(Object obj : vals) {
-			if(obj instanceof Integer || obj instanceof Long) {
-				sum += ((Number) obj).longValue();
+			if(obj instanceof BigInteger) {
+				sum = sum.add((BigInteger) obj);
+			} else {
+				throw new IllegalArgumentException("Wrong value type: " + obj.getClass());
 			}
 		}
 		return sum;
