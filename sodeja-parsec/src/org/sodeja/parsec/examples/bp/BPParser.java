@@ -1,12 +1,14 @@
 package org.sodeja.parsec.examples.bp;
 
 import static org.sodeja.parsec.ParsecUtils.alternative1;
-import static org.sodeja.parsec.ParsecUtils.apply;
-import static org.sodeja.parsec.ParsecUtils.oneOrMoreSep;
+import static org.sodeja.parsec.ParsecUtils.applyCons;
+//import static org.sodeja.parsec.ParsecUtils.oneOrMoreSep;
 import static org.sodeja.parsec.ParsecUtils.thenParser;
-import static org.sodeja.parsec.ParsecUtils.thenParser3;
-import static org.sodeja.parsec.ParsecUtils.thenParser4;
+import static org.sodeja.parsec.ParsecUtils.thenParser3Cons2;
+import static org.sodeja.parsec.ParsecUtils.thenParser4Cons13;
+import static org.sodeja.parsec.ParsecUtils.thenParserCons;
 import static org.sodeja.parsec.ParsecUtils.zeroOrMore;
+import static org.sodeja.parsec.ParsecUtils.zeroOrMoreSep;
 import static org.sodeja.parsec.standart.StandartParsers.alphaDigitsUnderscore;
 import static org.sodeja.parsec.standart.StandartParsers.justString;
 import static org.sodeja.parsec.standart.StandartParsers.literal;
@@ -14,10 +16,8 @@ import static org.sodeja.parsec.standart.StandartParsers.simpleIntegerParser;
 
 import java.util.List;
 
-import org.sodeja.functional.Function1;
+import org.sodeja.collections.ConsList;
 import org.sodeja.functional.Function2;
-import org.sodeja.functional.Function3;
-import org.sodeja.functional.Function4;
 import org.sodeja.functional.Pair;
 import org.sodeja.parsec.DelegateParser;
 import org.sodeja.parsec.Parser;
@@ -39,97 +39,84 @@ public class BPParser {
 	
 	// TODO this definition required one necessary parameter
 	private Parser<String, List<BeanPath>> BEAN_PATHS =
-		oneOrMoreSep("BEAN_PATHS", BEAN_PATH, literal(","));
+		zeroOrMoreSep("BEAN_PATHS", BEAN_PATH, literal(","));
+//		oneOrMoreSep("BEAN_PATHS", BEAN_PATH, literal(","));
 
+	// Name support - java identifier
 	private Parser<String, String> NAME = alphaDigitsUnderscore("NAME");
 	
+	// Number support - integer
 	private Parser<String, Integer> NUMBER = simpleIntegerParser("NUMBER");
 	
+	// Promote number to an expression
 	private Parser<String, NumberExpression> NUMBER_EXPRESSION = 
-		apply("NUMBER_EXPRESSION", NUMBER, 
-			new Function1<NumberExpression, Integer>() {
-				public NumberExpression execute(Integer p) {
-					return new NumberExpression(p);
-				}});
+		applyCons("NUMBER_EXPRESSION", NUMBER, NumberExpression.class); 
 	
+	// Promote string literal to expression
 	private Parser<String, StringExpression> STRING_EXPRESSION =
-		apply("STRING_EXPRESSION", justString("STRING_EXPRESSION_INT"),
-			new Function1<StringExpression, String>() {
-				public StringExpression execute(String p) {
-					return new StringExpression(p);
-				}});
+		applyCons("STRING_EXPRESSION", justString("STRING_EXPRESSION_INT"), StringExpression.class);
 	
+	// Primitive expression - number or string
 	private Parser<String, Expression> PRIMITIVE_EXPRESSION =
 		alternative1("PRIMITIVE_EXPRESSION", NUMBER_EXPRESSION, STRING_EXPRESSION);
 	
+	// List access - [n], where n is a number
 	private Parser<String, ListAccess> LIST_ACCESS = 
-		thenParser3("LIST_ACCESS", literal("["), NUMBER, literal("]"), 
-			new Function3<ListAccess, String, Integer, String>() {
-				public ListAccess execute(String p1, Integer p2, String p3) {
-					return new ListAccess(p2);
-				}});
+		thenParser3Cons2("LIST_ACCESS", literal("["), NUMBER, literal("]"), ListAccess.class); 
 	
-	private Parser<String, MapAccess> MAP_ACCESS = 
-		thenParser3("MAP_ACCESS", literal("{"), BEAN_PATH, literal("}"), 
-			new Function3<MapAccess, String, BeanPath, String>() {
-				public MapAccess execute(String p1, BeanPath p2, String p3) {
-					return new MapAccess(p2);
-				}});
+	// Map access - {m}, where m can be also a bean path
+	private Parser<String, MapAccess> MAP_ACCESS =
+		thenParser3Cons2("MAP_ACCESS", literal("{"), BEAN_PATH, literal("}"), MapAccess.class);
 	
+	// Promote identifier to property access
 	private Parser<String, Property> PROPERTY =
-		apply("PROPERTY", NAME, new Function1<Property, String>() {
-			public Property execute(String p) {
-				return new Property(p);
-			}});
+		applyCons("PROPERTY", NAME, Property.class);
 
-	private Parser<String, Method> METHOD = 
-		thenParser4("METHOD", NAME, literal("("), BEAN_PATHS, literal(")"), 
-			new Function4<Method, String, String, List<BeanPath>, String>() {
-				public Method execute(String p1, String p2, List<BeanPath> p3, String p4) {
-					return new Method(p1, p3);
-				}});
+	// Method access - (z), a method invocation, z are the parameters to this invocation - also bean paths 
+	private Parser<String, Method> METHOD =
+		thenParser4Cons13("METHOD", NAME, literal("("), BEAN_PATHS, literal(")"), Method.class);
 	
+	// Wraps both map/list access as viable alternatives
 	private Parser<String, Access> ACCESS =
 		alternative1("ACCESS", LIST_ACCESS, MAP_ACCESS);
 	
+	// this parses zero or more repetitions of an access - [3]{"alalabala"}[2]
 	private Parser<String, List<Access>> ACCESSES =
 		zeroOrMore("ACCESSES", ACCESS);
 	
+	// Property followed by some accesses - for instance a[3]
 	private Parser<String, PropertyAccesses> PROPERTY_ACCESS =
-		thenParser("PROPERTY_ACCESS", PROPERTY, ACCESSES, 
-			new Function2<PropertyAccesses, Property, List<Access>>() {
-				public PropertyAccesses execute(Property p1, List<Access> p2) {
-					return new PropertyAccesses(p1, p2);
-				}});
+		thenParserCons("PROPERTY_ACCESS", PROPERTY, ACCESSES, PropertyAccesses.class); 
 	
+	// Method invocation followed by accesses - for instance a()[3]
 	private Parser<String, MethodAccesses> METHOD_ACCESS =
-		thenParser("METHOD_ACCESS", METHOD, ACCESSES, 
-			new Function2<MethodAccesses, Method, List<Access>>() {
-				public MethodAccesses execute(Method p1, List<Access> p2) {
-					return new MethodAccesses(p1, p2);
-				}});
+		thenParserCons("METHOD_ACCESS", METHOD, ACCESSES, MethodAccesses.class); 
 	
+	// Subexpression - either method or property access
 	private Parser<String, Expression> METHOD_PROPERTY_ACCESS =
 		alternative1("METHOD_PROPERTY_ACCESS", METHOD_ACCESS, PROPERTY_ACCESS);
 	
+	// Subexpression - either simple value of property access
 	private Parser<String, Expression> START_EXPRESSION =
 		alternative1("START_EXPRESSION", PRIMITIVE_EXPRESSION, PROPERTY_ACCESS);
 	
+	// Path element - a.b.n - the a
+	private Parser<String, Expression> PATH_ELEMENT_WITH_DOT = 
+		thenParser("PATH_ELEMENTS_WITH_.", literal("."), METHOD_PROPERTY_ACCESS, 
+			Function2.Utils.justSecond(String.class, Expression.class));
+	
+	// Path elements - a.b.c - a b and c
 	private Parser<String, List<Expression>> PATH_ELEMENTS =
-		zeroOrMore("PATH_ELEMENTS", thenParser("PATH_ELEMENTS_WITH_.", literal("."), METHOD_PROPERTY_ACCESS, 
-				Function2.Utils.justSecond(String.class, Expression.class)));
+		zeroOrMore("PATH_ELEMENTS", PATH_ELEMENT_WITH_DOT);
 
 	public BPParser() {
-		BEAN_PATH.delegate = thenParser("BEAN_PATH_DELEGATE", START_EXPRESSION, PATH_ELEMENTS, 
-				new Function2<BeanPath, Expression, List<Expression>>() {
-					public BeanPath execute(Expression p1, List<Expression> p2) {
-						return new BeanPath(p1, p2);
-					}});
+		BEAN_PATH.delegate = thenParserCons("BEAN_PATH_DELEGATE", START_EXPRESSION, PATH_ELEMENTS, BeanPath.class); 
 	}
 	
-	public BeanPath parse(List<String> tokens) {
-		List<Pair<BeanPath, List<String>>> parseResults = BEAN_PATH.execute(tokens);
-		for(Pair<BeanPath, List<String>> result : parseResults) {
+	public BeanPath parse(final List<String> tokensList) {
+		ConsList<String> tokens = ConsList.createList(tokensList);
+		List<Pair<BeanPath, ConsList<String>>> parseResults = BEAN_PATH.execute(tokens);
+		for(Pair<BeanPath, ConsList<String>> result : parseResults) {
 			if(result.second.isEmpty()) {
 				return result.first;
 			}
