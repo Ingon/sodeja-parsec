@@ -2,7 +2,6 @@ package org.sodeja.parsec.examples.bp;
 
 import static org.sodeja.parsec.ParsecUtils.alternative1;
 import static org.sodeja.parsec.ParsecUtils.applyCons;
-//import static org.sodeja.parsec.ParsecUtils.oneOrMoreSep;
 import static org.sodeja.parsec.ParsecUtils.thenParser;
 import static org.sodeja.parsec.ParsecUtils.thenParser3Cons2;
 import static org.sodeja.parsec.ParsecUtils.thenParser4Cons13;
@@ -40,7 +39,6 @@ public class BPParser {
 	// TODO this definition required one necessary parameter
 	private Parser<String, List<BeanPath>> BEAN_PATHS =
 		zeroOrMoreSep("BEAN_PATHS", BEAN_PATH, literal(","));
-//		oneOrMoreSep("BEAN_PATHS", BEAN_PATH, literal(","));
 
 	// Name support - java identifier
 	private Parser<String, String> NAME = alphaDigitsUnderscore("NAME");
