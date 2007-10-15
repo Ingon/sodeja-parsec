@@ -10,7 +10,7 @@ public class LispMain {
 	public static void main(String[] args) {
 		String lib = 
 				"(def square (\\ (x) (* x x))) " +
-				"(def average (\\ (x y) (/ x y))) " +
+				"(def average (\\ (x y) (/ (+ x y) 2))) " +
 				"(def mean-square (\\ (x y) (average (square x) (square y)))) " +
 				"(def abs (\\ (x) (if (< x 0) (- x) x))) ";
 //		String exp = "3 (+ 3 4 8) (+ 3 (* 5 6) 8 2)";
@@ -37,7 +37,7 @@ public class LispMain {
 //				"(abs (- 3))";
 		String exp = lib +
 			"(def improve (\\ (guess x) (average guess (/ x guess)))) " + 
-			"(def good-enough? (\\ (guess x) (< (abs (- (square guess))) 0.001))) " +
+			"(def good-enough? (\\ (guess x) (< (abs (- (square guess) x)) 0.001))) " +
 			"(def try (\\ (guess x) (if (good-enough? guess x) guess (try (improve guess x) x)))) " + 
 			"(def sqrt (\\ (x) (try 1 x))) " +
 			"(sqrt 2)";
