@@ -4,13 +4,13 @@ import java.util.List;
 
 import org.sodeja.parsec.examples.lisp.model.SExpression;
 
-public class ListProcedure implements Procedure {
+public class LispProcedure implements Procedure {
 	
 	private final Frame frame;
 	private final List<String> params;
 	private final SExpression body;
 	
-	public ListProcedure(Frame frame, List<String> params, SExpression body) {
+	public LispProcedure(Frame frame, List<String> params, SExpression body) {
 		this.frame = frame;
 		this.params = params;
 		this.body = body;
