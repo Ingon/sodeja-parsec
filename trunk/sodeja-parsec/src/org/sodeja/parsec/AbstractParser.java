@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.sodeja.collections.ConsList;
 import org.sodeja.functional.Pair;
 
 public abstract class AbstractParser<Tok, Res> implements Parser<Tok, Res> {
 	
-	protected final List<Pair<Res, List<Tok>>> EMPTY = Collections.unmodifiableList(new ArrayList<Pair<Res, List<Tok>>>());
+	protected final List<Pair<Res, ConsList<Tok>>> EMPTY = Collections.unmodifiableList(new ArrayList<Pair<Res, ConsList<Tok>>>());
 	
 	private String name;
 	
@@ -16,28 +17,24 @@ public abstract class AbstractParser<Tok, Res> implements Parser<Tok, Res> {
 		this.name = name;
 	}
 	
-	public List<Pair<Res, List<Tok>>> execute(List<Tok> tokens) {
+	public List<Pair<Res, ConsList<Tok>>> execute(ConsList<Tok> tokens) {
 		if(tokens.isEmpty()) {
 			return EMPTY;
 		}
 		return executeDelegate(tokens);
 	}
 	
-	protected abstract List<Pair<Res, List<Tok>>> executeDelegate(List<Tok> tokens);
+	protected abstract List<Pair<Res, ConsList<Tok>>> executeDelegate(ConsList<Tok> tokens);
 	
-	public static <Tok, Res> List<Pair<Res, List<Tok>>> create(Res value, List<Tok> tokens) {
-		List<Pair<Res, List<Tok>>> result = new ArrayList<Pair<Res, List<Tok>>>();
-		result.add(new Pair<Res, List<Tok>>(value, tokens));
+	public static <Tok, Res> List<Pair<Res, ConsList<Tok>>> create(Res value, ConsList<Tok> tokens) {
+		List<Pair<Res, ConsList<Tok>>> result = new ArrayList<Pair<Res, ConsList<Tok>>>();
+		result.add(new Pair<Res, ConsList<Tok>>(value, tokens));
 		return result;
 	}
 	
-	public static <Tok, Res> List<Pair<Res, List<Tok>>> createWithRemove(Res value, List<Tok> tokens) {
-		List<Pair<Res, List<Tok>>> result = new ArrayList<Pair<Res, List<Tok>>>();
-		
-		List<Tok> tokenResult = new ArrayList<Tok>(tokens);
-		tokenResult.remove(0);		
-		
-		result.add(new Pair<Res, List<Tok>>(value, tokenResult));
+	public static <Tok, Res> List<Pair<Res, ConsList<Tok>>> createWithRemove(Res value, ConsList<Tok> tokens) {
+		List<Pair<Res, ConsList<Tok>>> result = new ArrayList<Pair<Res, ConsList<Tok>>>();
+		result.add(new Pair<Res, ConsList<Tok>>(value, tokens.getTail()));
 		return result;
 	}
 

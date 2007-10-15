@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.sodeja.collections.ListUtils;
 import org.sodeja.parsec.examples.bp.model.BeanPath;
 
 public class BeanPathMain {
@@ -53,7 +52,8 @@ public class BeanPathMain {
 //		System.out.println(path);
 		
 //		String path = "a.a(d, e).b[1].c{\"iuhu\"}";
-		String path = "\"juuuuuuji\".substring(1)";
+		String path = "\"juuuuuuji\".length()";
+//		String path = "\"juuuuuuji\".substring(1)";
 		
 		BPLexer lexer = new BPLexer(new StringReader(path));
 		List<String> tokens = lexer.tokenize();
@@ -62,6 +62,13 @@ public class BeanPathMain {
 		
 		BPParser parser = new BPParser();
 		BeanPath bp = parser.parse(tokens);
+		
+		long start = System.currentTimeMillis();
+		for(int i = 0;i < 1000;i++) {
+			parser.parse(tokens);
+		}
+		long end = System.currentTimeMillis();
+		System.out.println("Time: " + (end - start));
 		
 		System.out.println("Expressions: " + bp);
 		

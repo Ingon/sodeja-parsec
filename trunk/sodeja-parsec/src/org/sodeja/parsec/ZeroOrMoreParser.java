@@ -3,6 +3,7 @@ package org.sodeja.parsec;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sodeja.collections.ConsList;
 import org.sodeja.functional.Pair;
 
 public class ZeroOrMoreParser<Tok, Res> extends AbstractParser<Tok, List<Res>> {
@@ -16,16 +17,16 @@ public class ZeroOrMoreParser<Tok, Res> extends AbstractParser<Tok, List<Res>> {
 
 	// TODO is this ok ?
 	@Override
-	public List<Pair<List<Res>, List<Tok>>> execute(List<Tok> tokens) {
+	public List<Pair<List<Res>, ConsList<Tok>>> execute(ConsList<Tok> tokens) {
 		return executeDelegate(tokens);
 	}
 
 	// TODO refactor to use OneOrMoreParser + EmptyParser
 	@Override
-	protected List<Pair<List<Res>, List<Tok>>> executeDelegate(List<Tok> tokens) {
-		List<Tok> tempTokens = tokens;
+	protected List<Pair<List<Res>, ConsList<Tok>>> executeDelegate(ConsList<Tok> tokens) {
+		ConsList<Tok> tempTokens = tokens;
 		List<Res> tempResult = new ArrayList<Res>();
-		for(List<Pair<Res, List<Tok>>> internalResult = internal.execute(tempTokens); 
+		for(List<Pair<Res, ConsList<Tok>>> internalResult = internal.execute(tempTokens); 
 				! internalResult.isEmpty(); 
 				internalResult = internal.execute(tempTokens)) {
 			
