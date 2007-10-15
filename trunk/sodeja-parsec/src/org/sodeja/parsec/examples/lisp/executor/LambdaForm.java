@@ -22,6 +22,6 @@ public class LambdaForm implements Form {
 				return ((NameExpression) p).name;
 			}}); 
 		
-		return new ListProcedure(executor.getFrame(), params, body);
+		return new LispProcedure(executor.getFrame(), params, body);
 	}
 }
