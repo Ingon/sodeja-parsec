@@ -12,9 +12,7 @@ import static org.sodeja.parsec.standart.StandartParsers.literal;
 
 import java.util.List;
 
-import org.sodeja.collections.ConsList;
 import org.sodeja.functional.Function2;
-import org.sodeja.functional.Pair;
 import org.sodeja.parsec.Parser;
 import org.sodeja.parsec.examples.script.model.Block;
 import org.sodeja.parsec.examples.script.model.Command;
@@ -22,8 +20,9 @@ import org.sodeja.parsec.examples.script.model.NamedProperty;
 import org.sodeja.parsec.examples.script.model.Property;
 import org.sodeja.parsec.examples.script.model.PropertyValue;
 import org.sodeja.parsec.examples.script.model.Script;
+import org.sodeja.parsec.semantic.AbstractSemanticParser;
 
-public class ScriptParser {
+public class ScriptParser extends AbstractSemanticParser<String, Script>{
 	public final Parser<String, PropertyValue> VALUE_PARSER =
 		applyCons("VALUE_PARSER", alphaDigitsUnderscore("VALUE_PARSER_CONTENT"), PropertyValue.class);
 	
@@ -57,15 +56,8 @@ public class ScriptParser {
 	public final Parser<String, Script> SCRIPT_PARSER =
 		applyCons("SCRIPT_PARSER", BLOCKS_PARSER, Script.class);
 	
-	public Script parse(List<String> tokensList) {
-		ConsList<String> tokens = ConsList.createList(tokensList);
-		List<Pair<Script, ConsList<String>>> parseResults = SCRIPT_PARSER.execute(tokens);
-		for(Pair<Script, ConsList<String>> result : parseResults) {
-			if(result.second.isEmpty()) {
-				return result.first;
-			}
-		}
-		
-		throw new RuntimeException("Syntax error!");
+	@Override
+	protected Parser<String, Script> getParser() {
+		return SCRIPT_PARSER;
 	}
 }

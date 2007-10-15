@@ -15,9 +15,7 @@ import static org.sodeja.parsec.standart.StandartParsers.simpleIntegerParser;
 
 import java.util.List;
 
-import org.sodeja.collections.ConsList;
 import org.sodeja.functional.Function2;
-import org.sodeja.functional.Pair;
 import org.sodeja.parsec.DelegateParser;
 import org.sodeja.parsec.Parser;
 import org.sodeja.parsec.examples.bp.model.Access;
@@ -31,8 +29,9 @@ import org.sodeja.parsec.examples.bp.model.NumberExpression;
 import org.sodeja.parsec.examples.bp.model.Property;
 import org.sodeja.parsec.examples.bp.model.PropertyAccesses;
 import org.sodeja.parsec.examples.bp.model.StringExpression;
+import org.sodeja.parsec.semantic.AbstractSemanticParser;
 
-public class BPParser {
+public class BPParser extends AbstractSemanticParser<String, BeanPath>{
 	
 	private DelegateParser<String, BeanPath> BEAN_PATH = new DelegateParser<String, BeanPath>("BEAN_PATH");
 	
@@ -111,15 +110,8 @@ public class BPParser {
 		BEAN_PATH.delegate = thenParserCons("BEAN_PATH_DELEGATE", START_EXPRESSION, PATH_ELEMENTS, BeanPath.class); 
 	}
 	
-	public BeanPath parse(final List<String> tokensList) {
-		ConsList<String> tokens = ConsList.createList(tokensList);
-		List<Pair<BeanPath, ConsList<String>>> parseResults = BEAN_PATH.execute(tokens);
-		for(Pair<BeanPath, ConsList<String>> result : parseResults) {
-			if(result.second.isEmpty()) {
-				return result.first;
-			}
-		}
-		
-		throw new RuntimeException("Syntax error!");
+	@Override
+	protected Parser<String, BeanPath> getParser() {
+		return BEAN_PATH;
 	}
 }

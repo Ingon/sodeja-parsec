@@ -57,6 +57,20 @@ public class LexerHelper {
 		lexer.tokens.add(lexer.createTokenFrom(lexer.helper.toString()));
 	}
 
+	// TODO this should be refactored or removed!
+	public static <T> void readIdentifierS(AbstractLexer<T> lexer, char initial) {
+		lexer.helper.setLength(0);
+		lexer.helper.append(initial);
+		
+		Character ch = null;
+		for(ch = lexer.readChar(); !Character.isWhitespace(ch) && ch!=')'; ch = lexer.readChar()) {
+			lexer.helper.append(ch);
+		}
+		lexer.unreadChar(ch);
+		
+		lexer.tokens.add(lexer.createTokenFrom(lexer.helper.toString()));
+	}
+	
 	public static <T> void readString(AbstractLexer<T> lexer, char initial) {
 		lexer.helper.setLength(0);
 		lexer.helper.append(initial);
