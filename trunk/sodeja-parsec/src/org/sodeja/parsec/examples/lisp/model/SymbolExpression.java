@@ -1,10 +1,10 @@
 package org.sodeja.parsec.examples.lisp.model;
 
-public class NameExpression implements SimpleExpression {
+public class SymbolExpression implements SimpleExpression {
 	
 	public final String name;
 	
-	public NameExpression(String name) {
+	public SymbolExpression(String name) {
 		this.name = name;
 	}
 
