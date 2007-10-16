@@ -1,9 +1,7 @@
 package org.sodeja.parsec.examples.lisp.executor.primitive;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-
 import org.sodeja.collections.ArrayUtils;
+import org.sodeja.math.Rational;
 
 public abstract class AbstractCompareProcedure implements PrimitiveProcedure {
 	@Override
@@ -12,29 +10,17 @@ public abstract class AbstractCompareProcedure implements PrimitiveProcedure {
 			throw new IllegalArgumentException("Wrong number of arguments!");
 		}
 
-		Object first = vals[0];
-		Object second = vals[1];
-		if(first instanceof BigDecimal && second instanceof BigDecimal) {
-			BigDecimal firstConv = ((BigDecimal) first);
-			BigDecimal secondConv = (BigDecimal) second;
-			return compare(firstConv.compareTo(secondConv));
-		} 
-		
-		if(first instanceof BigDecimal && second instanceof BigInteger) {
-			BigDecimal firstConv = ((BigDecimal) first);
-			BigInteger secondConv = (BigInteger) second;
-			return compare(firstConv.compareTo(new BigDecimal(secondConv)));
-		} 
+		if(! (vals[0] instanceof Rational)) {
+			throw new IllegalArgumentException("Wrong value type: " + vals[0].getClass());
+		}
 
-		if(first instanceof BigInteger && second instanceof BigDecimal) {
-			BigInteger firstConv = ((BigInteger) first);
-			BigDecimal secondConv = (BigDecimal) second;
-			return compare((new BigDecimal(firstConv)).compareTo(secondConv));
+		if(! (vals[1] instanceof Rational)) {
+			throw new IllegalArgumentException("Wrong value type: " + vals[1].getClass());
 		}
 		
-		BigInteger firstConv = ((BigInteger) first);
-		BigInteger secondConv = (BigInteger) second;
-		return compare(firstConv.compareTo(secondConv));
+		Rational first = (Rational) vals[0];
+		Rational second = (Rational) vals[1];
+		return compare(first.compareTo(second));
 	}
 	
 	public abstract Boolean compare(int val);
