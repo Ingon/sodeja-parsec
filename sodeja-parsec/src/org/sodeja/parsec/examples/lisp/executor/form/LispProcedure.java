@@ -31,9 +31,11 @@ public class LispProcedure implements Procedure {
 		}};
 		Frame thisFrame = new Frame(frame, paramsMapping);
 		
-		System.out.print("Apply: " + paramsMapping);
-		System.out.println(" To: " + body);
+		Object result = thisFrame.apply(body);
 		
-		return thisFrame.apply(body);
+		System.out.print("AAA: " + paramsMapping);
+		System.out.print(" TTT: " + body);
+		System.out.println(" RRR: " + result);
+		return result;
 	}
 }
