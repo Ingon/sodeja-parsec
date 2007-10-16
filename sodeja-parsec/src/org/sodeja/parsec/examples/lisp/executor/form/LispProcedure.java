@@ -12,12 +12,12 @@ public class LispProcedure implements Procedure {
 	
 	private final Frame frame;
 	private final List<String> params;
-	private final SExpression body;
+	private final List<SExpression> parts;
 	
-	public LispProcedure(Frame frame, List<String> params, SExpression body) {
+	public LispProcedure(Frame frame, List<String> params, List<SExpression> parts) {
 		this.frame = frame;
 		this.params = params;
-		this.body = body;
+		this.parts = parts;
 	}
 
 	@Override
@@ -31,11 +31,15 @@ public class LispProcedure implements Procedure {
 		}};
 		Frame thisFrame = new Frame(frame, paramsMapping);
 		
-		Object result = thisFrame.apply(body);
+		Object result = null;
+		for(SExpression part : parts) {
+			result = thisFrame.apply(part);
+		}
 		
-		System.out.print("AAA: " + paramsMapping);
-		System.out.print(" TTT: " + body);
-		System.out.println(" RRR: " + result);
+//		System.out.print("AAA: " + paramsMapping);
+//		System.out.print(" TTT: " + parts);
+//		System.out.println(" RRR: " + result);
+		
 		return result;
 	}
 }

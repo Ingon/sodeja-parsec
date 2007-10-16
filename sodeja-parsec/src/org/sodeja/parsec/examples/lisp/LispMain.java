@@ -35,13 +35,19 @@ public class LispMain {
 //					"((> x 0) x)))) " +
 //				"(def abs (\\ (x) (if (< x 0) (- x) x))) " +
 //				"(abs (- 3))";
+//		String exp = lib +
+//			"(def improve (\\ (guess x) (average guess (/ x guess)))) " + 
+//			"(def good-enough? (\\ (guess x) (< (abs (- (square guess) x)) 0.001))) " +
+//			"(def try (\\ (guess x) (if (good-enough? guess x) guess (try (improve guess x) x)))) " + 
+//			"(def sqrt (\\ (x) (try 1 x))) " +
+//			"(sqrt 2)";
 		String exp = lib +
-			"(def improve (\\ (guess x) (average guess (/ x guess)))) " + 
-			"(def good-enough? (\\ (guess x) (< (abs (- (square guess) x)) 0.001))) " +
-			"(def try (\\ (guess x) (if (good-enough? guess x) guess (try (improve guess x) x)))) " + 
-			"(def sqrt (\\ (x) (try 1 x))) " +
+			"(def sqrt (\\ (x) " +
+			  "(def good-enough? (\\ (guess) (< (abs (- (square guess) x)) 0.001))) " +
+			  "(def improve (\\ (guess) (average guess (/ x guess)))) " +
+			  "(def try (\\ (guess) (if (good-enough? guess) guess (try (improve guess))))) " +
+			  "(try 1.0 x))) " + 
 			"(sqrt 2)";
-//			"(good-enough? 17/12 2)";
 		LispLexer lexer = new LispLexer(new StringReader(exp));
 		List<String> tokens = lexer.tokenize();
 		System.out.println(tokens);
