@@ -1,9 +1,7 @@
 package org.sodeja.parsec.standart;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-
 import org.sodeja.functional.Predicate1;
+import org.sodeja.math.Rational;
 import org.sodeja.parsec.Parser;
 import org.sodeja.parsec.SatisfiesParser;
 
@@ -97,11 +95,7 @@ public class StandartParsers {
 		};
 	}
 	
-	public static Parser<String, BigInteger> bigInteger(final String name) {
-		return new BigIntegerParser(name);
-	}
-
-	public static Parser<String, BigDecimal> bigDecimal(final String name) {
-		return new BigDecimalParser(name);
+	public static Parser<String, Rational> rational(final String name) {
+		return new RationalParser(name);
 	}
 }
