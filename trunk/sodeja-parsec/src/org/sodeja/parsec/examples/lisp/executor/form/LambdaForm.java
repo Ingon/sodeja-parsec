@@ -15,14 +15,18 @@ public class LambdaForm implements Form {
 		// TODO check for errors
 		
 		SExpression paramsExp = (SExpression) expressions.get(0);
-		SExpression body = (SExpression) expressions.get(1);
 		
 		List<String> params = ListUtils.map(paramsExp.expressions, new Function1<String, Expression>() {
 			@Override
 			public String execute(Expression p) {
 				return ((SymbolExpression) p).name;
-			}}); 
+			}});
 		
-		return new LispProcedure(frame, params, body);
+		List<SExpression> parts = ListUtils.map(ListUtils.tail(expressions), new Function1<SExpression, Expression>() {
+			@Override
+			public SExpression execute(Expression p) {
+				return (SExpression) p;
+			}});
+		return new LispProcedure(frame, params, parts);
 	}
 }
