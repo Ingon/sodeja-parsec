@@ -41,6 +41,7 @@ public class LispMain {
 			"(def try (\\ (guess x) (if (good-enough? guess x) guess (try (improve guess x) x)))) " + 
 			"(def sqrt (\\ (x) (try 1 x))) " +
 			"(sqrt 2)";
+//			"(good-enough? 17/12 2)";
 		LispLexer lexer = new LispLexer(new StringReader(exp));
 		List<String> tokens = lexer.tokenize();
 		System.out.println(tokens);
