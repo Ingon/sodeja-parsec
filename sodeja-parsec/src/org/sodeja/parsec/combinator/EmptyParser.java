@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.sodeja.collections.ConsList;
 import org.sodeja.functional.Pair;
+import org.sodeja.parsec.AbstractParser;
 
 public class EmptyParser<Tok, Res> extends AbstractParser<Tok, Res> {
 	

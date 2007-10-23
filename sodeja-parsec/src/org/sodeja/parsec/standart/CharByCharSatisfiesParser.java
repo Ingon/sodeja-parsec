@@ -5,7 +5,7 @@ import java.util.List;
 import org.sodeja.collections.ConsList;
 import org.sodeja.functional.Pair;
 import org.sodeja.functional.Predicate1;
-import org.sodeja.parsec.combinator.AbstractParser;
+import org.sodeja.parsec.AbstractParser;
 import org.sodeja.parsec.combinator.SatisfiesParser;
 
 public abstract class CharByCharSatisfiesParser extends AbstractParser<String, String> {
