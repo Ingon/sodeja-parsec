@@ -1,13 +1,11 @@
 package org.sodeja.parsec.combinator;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.sodeja.collections.ConsList;
 import org.sodeja.functional.Function2;
-import org.sodeja.functional.Pair;
 import org.sodeja.parsec.AbstractParser;
+import org.sodeja.parsec.ParseSuccess;
 import org.sodeja.parsec.Parser;
+import org.sodeja.parsec.ParsingResult;
 
 public class ThenParser<Tok, Res, Res1, Res2> extends AbstractParser<Tok, Res> {
 
@@ -23,20 +21,22 @@ public class ThenParser<Tok, Res, Res1, Res2> extends AbstractParser<Tok, Res> {
 	}
 
 	@Override
-	protected List<Pair<Res, ConsList<Tok>>> executeDelegate(ConsList<Tok> tokens) {
-		List<Pair<Res, ConsList<Tok>>> result = new ArrayList<Pair<Res, ConsList<Tok>>>();
-		
-		List<Pair<Res1, ConsList<Tok>>> firstResult = first.execute(tokens);
-		for(Pair<Res1, ConsList<Tok>> firstPair : firstResult) {
-			List<Pair<Res2, ConsList<Tok>>> secondResult = second.execute(firstPair.second);
-			
-			for(Pair<Res2, ConsList<Tok>> secondPair : secondResult) {
-				result.add(new Pair<Res, ConsList<Tok>>(
-						combinator.execute(firstPair.first, secondPair.first), 
-						secondPair.second));
-			}
+	protected ParsingResult<Tok, Res> executeDelegate(ConsList<Tok> tokens) {
+		ParsingResult<Tok, Res1> firstResult = first.execute(tokens);
+		if(isFailure(firstResult)) {
+			return createFailure(firstResult);
 		}
 		
-		return result;
+		ParseSuccess<Tok, Res1> firstSuccess = (ParseSuccess<Tok, Res1>) firstResult;
+		
+		ParsingResult<Tok, Res2> secondResult = second.execute(firstSuccess.tokens);
+		if(isFailure(secondResult)) {
+			return createFailure(secondResult);
+		}
+		
+		ParseSuccess<Tok, Res2> secondSuccess = (ParseSuccess<Tok, Res2>) secondResult;
+		
+		Res combinedResult = combinator.execute(firstSuccess.result, secondSuccess.result);
+		return new ParseSuccess<Tok, Res>(combinedResult, secondSuccess.tokens);
 	}
 }

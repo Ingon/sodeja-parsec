@@ -1,22 +1,26 @@
 package org.sodeja.parsec.combinator;
 
-import java.util.List;
-
 import org.sodeja.collections.ConsList;
-import org.sodeja.functional.Pair;
 import org.sodeja.parsec.AbstractParser;
+import org.sodeja.parsec.ParseSuccess;
+import org.sodeja.parsec.ParsingResult;
 
 public class EmptyParser<Tok, Res> extends AbstractParser<Tok, Res> {
 	
-	private final List<Pair<Res, ConsList<Tok>>> result;
+	private final Res result;
 	
-	public EmptyParser(final String name, final List<Pair<Res, ConsList<Tok>>> result) {
+	public EmptyParser(final String name, final Res result) {
 		super(name);
 		this.result = result;
 	}
 
 	@Override
-	protected List<Pair<Res, ConsList<Tok>>> executeDelegate(ConsList<Tok> tokens) {
-		return result;
+	public ParsingResult<Tok, Res> execute(ConsList<Tok> tokens) {
+		return executeDelegate(tokens);
+	}
+
+	@Override
+	protected ParsingResult<Tok, Res> executeDelegate(ConsList<Tok> tokens) {
+		return new ParseSuccess<Tok, Res>(result, tokens);
 	}
 }

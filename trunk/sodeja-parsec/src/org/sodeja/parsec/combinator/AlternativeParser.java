@@ -1,12 +1,10 @@
 package org.sodeja.parsec.combinator;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.sodeja.collections.ConsList;
-import org.sodeja.functional.Pair;
 import org.sodeja.parsec.AbstractParser;
+import org.sodeja.parsec.ParseError;
 import org.sodeja.parsec.Parser;
+import org.sodeja.parsec.ParsingResult;
 
 public class AlternativeParser<Tok, Res> extends AbstractParser<Tok, Res> {
 	
@@ -20,10 +18,22 @@ public class AlternativeParser<Tok, Res> extends AbstractParser<Tok, Res> {
 	}
 
 	@Override
-	protected List<Pair<Res, ConsList<Tok>>> executeDelegate(ConsList<Tok> tokens) {
-		List<Pair<Res, ConsList<Tok>>> result = new ArrayList<Pair<Res, ConsList<Tok>>>();
-		result.addAll(first.execute(tokens));
-		result.addAll(second.execute(tokens));
-		return result;
+	public ParsingResult<Tok, Res> execute(ConsList<Tok> tokens) {
+		return executeDelegate(tokens);
+	}
+
+	@Override
+	protected ParsingResult<Tok, Res> executeDelegate(ConsList<Tok> tokens) {
+		ParsingResult<Tok, Res> firstExecute = first.execute(tokens);
+		if(isSuccess(firstExecute)) {
+			return firstExecute;
+		}
+		
+		ParsingResult<Tok, Res> secondExecute = second.execute(tokens);
+		if(isSuccess(secondExecute)) {
+			return secondExecute;
+		}
+		
+		return new ParseError<Tok, Res>("Expecting " + first.getName() + " or " + second.getName());
 	}
 }

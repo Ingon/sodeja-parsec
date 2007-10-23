@@ -1,13 +1,11 @@
 package org.sodeja.parsec.standart;
 
-import java.util.List;
-
 import org.sodeja.collections.ConsList;
 import org.sodeja.functional.Function1;
-import org.sodeja.functional.Pair;
 import org.sodeja.functional.Predicate1;
 import org.sodeja.parsec.AbstractParser;
 import org.sodeja.parsec.Parser;
+import org.sodeja.parsec.ParsingResult;
 import org.sodeja.parsec.combinator.ApplyParser;
 import org.sodeja.parsec.combinator.SatisfiesParser;
 
@@ -45,7 +43,7 @@ public class SimpleIntegerParser extends AbstractParser<String, Integer> {
 	}
 	
 	@Override
-	protected List<Pair<Integer, ConsList<String>>> executeDelegate(ConsList<String> tokens) {
+	protected ParsingResult<String, Integer> executeDelegate(ConsList<String> tokens) {
 		return convertParser.execute(tokens);
 	}
 }

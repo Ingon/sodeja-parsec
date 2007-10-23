@@ -1,10 +1,10 @@
 package org.sodeja.parsec.standart;
 
-import java.util.List;
-
 import org.sodeja.collections.ConsList;
-import org.sodeja.functional.Pair;
 import org.sodeja.parsec.AbstractParser;
+import org.sodeja.parsec.ParseError;
+import org.sodeja.parsec.ParseSuccess;
+import org.sodeja.parsec.ParsingResult;
 
 public class StringParser extends AbstractParser<String, String> {
 	public StringParser(String name) {
@@ -12,11 +12,12 @@ public class StringParser extends AbstractParser<String, String> {
 	}
 
 	@Override
-	protected List<Pair<String, ConsList<String>>> executeDelegate(ConsList<String> tokens) {
+	protected ParsingResult<String, String> executeDelegate(ConsList<String> tokens) {
 		String token = tokens.get(0);
 		if(token.startsWith("\"") && token.endsWith("\"")) {
-			return createWithRemove(token.substring(1, token.length() - 1), tokens);
+			return new ParseSuccess<String, String>(token.substring(1, token.length() - 1), tokens.getTail());
 		}
-		return EMPTY;
+		
+		return new ParseError<String, String>("Expects an string in \"...\" form!");
 	}
 }
