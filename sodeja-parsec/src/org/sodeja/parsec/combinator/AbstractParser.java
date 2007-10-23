@@ -1,4 +1,4 @@
-package org.sodeja.parsec;
+package org.sodeja.parsec.combinator;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.sodeja.collections.ConsList;
 import org.sodeja.functional.Pair;
+import org.sodeja.parsec.Parser;
 
 public abstract class AbstractParser<Tok, Res> implements Parser<Tok, Res> {
 	

@@ -1,20 +1,28 @@
-package org.sodeja.parsec;
+package org.sodeja.parsec.combinator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.sodeja.collections.ConsList;
 import org.sodeja.functional.Pair;
+import org.sodeja.parsec.Parser;
 
-public class OneOrMoreParser<Tok, Res> extends AbstractParser<Tok, List<Res>> {
+public class ZeroOrMoreParser<Tok, Res> extends AbstractParser<Tok, List<Res>> {
 
 	private final Parser<Tok, Res> internal;
 
-	public OneOrMoreParser(final String name, final Parser<Tok, Res> internal) {
+	public ZeroOrMoreParser(final String name, final Parser<Tok, Res> internal) {
 		super(name);
 		this.internal = internal;
 	}
-	
+
+	// TODO is this ok ?
+	@Override
+	public List<Pair<List<Res>, ConsList<Tok>>> execute(ConsList<Tok> tokens) {
+		return executeDelegate(tokens);
+	}
+
+	// TODO refactor to use OneOrMoreParser + EmptyParser
 	@Override
 	protected List<Pair<List<Res>, ConsList<Tok>>> executeDelegate(ConsList<Tok> tokens) {
 		ConsList<Tok> tempTokens = tokens;
@@ -25,10 +33,6 @@ public class OneOrMoreParser<Tok, Res> extends AbstractParser<Tok, List<Res>> {
 			
 			tempResult.add(internalResult.get(0).first);
 			tempTokens = internalResult.get(0).second;
-		}
-		
-		if(tempResult.size() == 0) {
-			return EMPTY;
 		}
 		
 		return create(tempResult, tempTokens);

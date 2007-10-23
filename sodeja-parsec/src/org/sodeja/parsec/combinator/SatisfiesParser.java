@@ -1,4 +1,4 @@
-package org.sodeja.parsec;
+package org.sodeja.parsec.combinator;
 
 import java.util.List;
 

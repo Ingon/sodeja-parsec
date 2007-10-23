@@ -1,12 +1,12 @@
 package org.sodeja.parsec.examples.script;
 
-import static org.sodeja.parsec.ParsecUtils.alternative1;
-import static org.sodeja.parsec.ParsecUtils.applyCons;
-import static org.sodeja.parsec.ParsecUtils.thenParser;
-import static org.sodeja.parsec.ParsecUtils.thenParser3Cons12;
-import static org.sodeja.parsec.ParsecUtils.thenParser4Cons13;
-import static org.sodeja.parsec.ParsecUtils.thenParserCons;
-import static org.sodeja.parsec.ParsecUtils.zeroOrMore;
+import static org.sodeja.parsec.combinator.ParsecUtils.alternative1;
+import static org.sodeja.parsec.combinator.ParsecUtils.applyCons;
+import static org.sodeja.parsec.combinator.ParsecUtils.thenParser;
+import static org.sodeja.parsec.combinator.ParsecUtils.thenParser3Cons12;
+import static org.sodeja.parsec.combinator.ParsecUtils.thenParser4Cons13;
+import static org.sodeja.parsec.combinator.ParsecUtils.thenParserCons;
+import static org.sodeja.parsec.combinator.ParsecUtils.zeroOrMore;
 import static org.sodeja.parsec.standart.StandartParsers.alphaDigitsUnderscore;
 import static org.sodeja.parsec.standart.StandartParsers.literal;
 
