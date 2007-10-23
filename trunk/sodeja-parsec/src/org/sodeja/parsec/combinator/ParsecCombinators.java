@@ -9,8 +9,8 @@ import org.sodeja.functional.Function3;
 import org.sodeja.functional.Function4;
 import org.sodeja.parsec.Parser;
 
-public class ParsecUtils {
-	private ParsecUtils() {
+public class ParsecCombinators {
+	private ParsecCombinators() {
 	}
 	
 	public static <Tok, Res> Parser<Tok, List<Res>> oneOrMore(String name, Parser<Tok, Res> parser) {

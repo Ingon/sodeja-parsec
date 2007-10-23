@@ -1,13 +1,13 @@
 package org.sodeja.parsec.examples.bp;
 
-import static org.sodeja.parsec.combinator.ParsecUtils.alternative1;
-import static org.sodeja.parsec.combinator.ParsecUtils.applyCons;
-import static org.sodeja.parsec.combinator.ParsecUtils.thenParser;
-import static org.sodeja.parsec.combinator.ParsecUtils.thenParser3Cons2;
-import static org.sodeja.parsec.combinator.ParsecUtils.thenParser4Cons13;
-import static org.sodeja.parsec.combinator.ParsecUtils.thenParserCons;
-import static org.sodeja.parsec.combinator.ParsecUtils.zeroOrMore;
-import static org.sodeja.parsec.combinator.ParsecUtils.zeroOrMoreSep;
+import static org.sodeja.parsec.combinator.ParsecCombinators.alternative1;
+import static org.sodeja.parsec.combinator.ParsecCombinators.applyCons;
+import static org.sodeja.parsec.combinator.ParsecCombinators.thenParser;
+import static org.sodeja.parsec.combinator.ParsecCombinators.thenParser3Cons2;
+import static org.sodeja.parsec.combinator.ParsecCombinators.thenParser4Cons13;
+import static org.sodeja.parsec.combinator.ParsecCombinators.thenParserCons;
+import static org.sodeja.parsec.combinator.ParsecCombinators.zeroOrMore;
+import static org.sodeja.parsec.combinator.ParsecCombinators.zeroOrMoreSep;
 import static org.sodeja.parsec.standart.StandartParsers.alphaDigitsUnderscore;
 import static org.sodeja.parsec.standart.StandartParsers.justString;
 import static org.sodeja.parsec.standart.StandartParsers.literal;
