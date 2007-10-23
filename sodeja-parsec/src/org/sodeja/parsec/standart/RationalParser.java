@@ -1,12 +1,11 @@
 package org.sodeja.parsec.standart;
 
-import java.util.List;
-
 import org.sodeja.collections.ConsList;
-import org.sodeja.collections.ListUtils;
-import org.sodeja.functional.Pair;
 import org.sodeja.math.Rational;
 import org.sodeja.parsec.AbstractParser;
+import org.sodeja.parsec.ParseError;
+import org.sodeja.parsec.ParseSuccess;
+import org.sodeja.parsec.ParsingResult;
 
 public class RationalParser extends AbstractParser<String, Rational> {
 	public RationalParser(String name) {
@@ -15,13 +14,13 @@ public class RationalParser extends AbstractParser<String, Rational> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected List<Pair<Rational, ConsList<String>>> executeDelegate(ConsList<String> tokens) {
+	protected ParsingResult<String, Rational> executeDelegate(ConsList<String> tokens) {
 		String head = tokens.getHead();
 		try {
 			Rational value = new Rational(head);
-			return ListUtils.asList(new Pair<Rational, ConsList<String>>(value, tokens.getTail()));
+			return new ParseSuccess<String, Rational>(value, tokens.getTail());
 		} catch(NumberFormatException exc) {
-			return EMPTY;
+			return new ParseError<String, Rational>("The token was not an rational!");
 		}
 	}
 }

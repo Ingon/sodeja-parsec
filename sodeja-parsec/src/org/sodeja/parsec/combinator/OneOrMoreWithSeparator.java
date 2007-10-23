@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sodeja.collections.ConsList;
-import org.sodeja.functional.Pair;
 import org.sodeja.parsec.AbstractParser;
+import org.sodeja.parsec.ParseError;
+import org.sodeja.parsec.ParseSuccess;
 import org.sodeja.parsec.Parser;
+import org.sodeja.parsec.ParsingResult;
 
 public class OneOrMoreWithSeparator<Tok, Res, Res1> extends AbstractParser<Tok, List<Res>> {
 
@@ -20,38 +22,37 @@ public class OneOrMoreWithSeparator<Tok, Res, Res1> extends AbstractParser<Tok, 
 	}
 
 	@Override
-	protected List<Pair<List<Res>, ConsList<Tok>>> executeDelegate(ConsList<Tok> tokens) {
+	protected ParsingResult<Tok, List<Res>> executeDelegate(ConsList<Tok> tokens) {
 		List<Res> results = new ArrayList<Res>();
 		ConsList<Tok> tempTokens = tokens;
 		
-		List<Pair<Res, ConsList<Tok>>> internalResult = internal.execute(tempTokens);
-		if(internalResult.isEmpty()) {
-			return EMPTY;
+		ParsingResult<Tok, Res> internalResult = internal.execute(tempTokens);
+		if(isFailure(internalResult)) {
+			return createFailure(internalResult);
 		}
 		
-		// FIXME should inspect all possible results
-		results.add(internalResult.get(0).first);
-		tempTokens = internalResult.get(0).second;
+		ParseSuccess<Tok, Res> internalSuccess = (ParseSuccess<Tok, Res>) internalResult;
 		
-		for(List<Pair<Res1, ConsList<Tok>>> separatorResult = separator.execute(tempTokens); 
-				! separatorResult.isEmpty(); 
-				separatorResult = separator.execute(tempTokens)) {
+		results.add(internalSuccess.result);
+		tempTokens = internalSuccess.tokens;
+		
+		for(ParsingResult<Tok, Res1> separatorResult = separator.execute(tempTokens); 
+				isSuccess(separatorResult);separatorResult = separator.execute(tempTokens)) {
 			
-			// TODO Maybe a loop ?
-			Pair<Res1, ConsList<Tok>> separatorPair = separatorResult.get(0);
-			tempTokens = separatorPair.second;
+			ParseSuccess<Tok, Res1> separatorSuccess = (ParseSuccess<Tok, Res1>) separatorResult;
+			tempTokens = separatorSuccess.tokens;
 			
 			internalResult = internal.execute(tempTokens);
-			if(internalResult.isEmpty()) {
-				return EMPTY;
+			if(isFailure(internalResult)) {
+				return new ParseError<Tok, List<Res>>("Expecting " + internal.getName());
 			}
 			
-			results.add(internalResult.get(0).first);
-			tempTokens = internalResult.get(0).second;
+			internalSuccess = (ParseSuccess<Tok, Res>) internalResult;
+
+			results.add(internalSuccess.result);
+			tempTokens = internalSuccess.tokens;
 		}
 		
-		List<Pair<List<Res>, ConsList<Tok>>> result = new ArrayList<Pair<List<Res>, ConsList<Tok>>>();
-		result.add(new Pair<List<Res>, ConsList<Tok>>(results, tempTokens));
-		return result;
+		return new ParseSuccess<Tok, List<Res>>(results, tempTokens);
 	}
 }

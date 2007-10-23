@@ -4,35 +4,39 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sodeja.collections.ConsList;
-import org.sodeja.functional.Pair;
 import org.sodeja.parsec.AbstractParser;
+import org.sodeja.parsec.ParseError;
+import org.sodeja.parsec.ParseSuccess;
 import org.sodeja.parsec.Parser;
+import org.sodeja.parsec.ParsingResult;
 
 public class OneOrMoreParser<Tok, Res> extends AbstractParser<Tok, List<Res>> {
 
-	private final Parser<Tok, Res> internal;
+	private final Parser<Tok, Res> delegate;
 
-	public OneOrMoreParser(final String name, final Parser<Tok, Res> internal) {
+	public OneOrMoreParser(final String name, final Parser<Tok, Res> delegate) {
 		super(name);
-		this.internal = internal;
+		this.delegate = delegate;
 	}
 	
 	@Override
-	protected List<Pair<List<Res>, ConsList<Tok>>> executeDelegate(ConsList<Tok> tokens) {
+	protected ParsingResult<Tok, List<Res>> executeDelegate(ConsList<Tok> tokens) {
 		ConsList<Tok> tempTokens = tokens;
 		List<Res> tempResult = new ArrayList<Res>();
-		for(List<Pair<Res, ConsList<Tok>>> internalResult = internal.execute(tempTokens); 
-				! internalResult.isEmpty(); 
-				internalResult = internal.execute(tempTokens)) {
+		for(ParsingResult<Tok, Res> delegateResult = delegate.execute(tempTokens); 
+				isSuccess(delegateResult); 
+				delegateResult = delegate.execute(tempTokens)) {
 			
-			tempResult.add(internalResult.get(0).first);
-			tempTokens = internalResult.get(0).second;
+			ParseSuccess<Tok, Res> delegateSuccess = (ParseSuccess<Tok, Res>) delegateResult; 
+			
+			tempResult.add(delegateSuccess.result);
+			tempTokens = delegateSuccess.tokens;
 		}
 		
 		if(tempResult.size() == 0) {
-			return EMPTY;
+			return new ParseError<Tok, List<Res>>("Expecting one or more " + delegate.getName());
 		}
 		
-		return create(tempResult, tempTokens);
+		return new ParseSuccess<Tok, List<Res>>(tempResult, tempTokens);
 	}
 }

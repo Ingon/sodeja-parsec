@@ -1,11 +1,11 @@
 package org.sodeja.parsec.combinator;
 
-import java.util.List;
-
 import org.sodeja.collections.ConsList;
-import org.sodeja.functional.Pair;
 import org.sodeja.functional.Predicate1;
 import org.sodeja.parsec.AbstractParser;
+import org.sodeja.parsec.ParseError;
+import org.sodeja.parsec.ParseSuccess;
+import org.sodeja.parsec.ParsingResult;
 
 public class SatisfiesParser<Tok> extends AbstractParser<Tok, Tok> {
 
@@ -17,11 +17,11 @@ public class SatisfiesParser<Tok> extends AbstractParser<Tok, Tok> {
 	}
 
 	@Override
-	protected List<Pair<Tok, ConsList<Tok>>> executeDelegate(ConsList<Tok> tokens) {
+	protected ParsingResult<Tok, Tok> executeDelegate(ConsList<Tok> tokens) {
 		if(functor.execute(tokens.get(0))) {
-			return createWithRemove(tokens.get(0), tokens);
+			return new ParseSuccess<Tok, Tok>(tokens.getHead(), tokens.getTail());
 		}
 
-		return EMPTY;
+		return new ParseError<Tok, Tok>("Expecting " + getName());
 	}
 }
