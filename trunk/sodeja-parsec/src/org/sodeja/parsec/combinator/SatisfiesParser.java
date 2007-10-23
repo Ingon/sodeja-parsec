@@ -5,6 +5,7 @@ import java.util.List;
 import org.sodeja.collections.ConsList;
 import org.sodeja.functional.Pair;
 import org.sodeja.functional.Predicate1;
+import org.sodeja.parsec.AbstractParser;
 
 public class SatisfiesParser<Tok> extends AbstractParser<Tok, Tok> {
 

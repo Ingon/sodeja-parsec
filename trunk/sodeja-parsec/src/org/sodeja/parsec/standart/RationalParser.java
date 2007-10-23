@@ -6,7 +6,7 @@ import org.sodeja.collections.ConsList;
 import org.sodeja.collections.ListUtils;
 import org.sodeja.functional.Pair;
 import org.sodeja.math.Rational;
-import org.sodeja.parsec.combinator.AbstractParser;
+import org.sodeja.parsec.AbstractParser;
 
 public class RationalParser extends AbstractParser<String, Rational> {
 	public RationalParser(String name) {

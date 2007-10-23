@@ -6,6 +6,7 @@ import java.util.List;
 import org.sodeja.collections.ConsList;
 import org.sodeja.functional.Function4;
 import org.sodeja.functional.Pair;
+import org.sodeja.parsec.AbstractParser;
 import org.sodeja.parsec.Parser;
 
 public class ThenParser4<Tok, Res, Res1, Res2, Res3, Res4> extends AbstractParser<Tok, Res> {

@@ -6,8 +6,8 @@ import org.sodeja.collections.ConsList;
 import org.sodeja.functional.Function1;
 import org.sodeja.functional.Pair;
 import org.sodeja.functional.Predicate1;
+import org.sodeja.parsec.AbstractParser;
 import org.sodeja.parsec.Parser;
-import org.sodeja.parsec.combinator.AbstractParser;
 import org.sodeja.parsec.combinator.ApplyParser;
 import org.sodeja.parsec.combinator.SatisfiesParser;
 
