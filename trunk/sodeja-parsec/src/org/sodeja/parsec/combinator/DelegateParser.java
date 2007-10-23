@@ -1,9 +1,10 @@
-package org.sodeja.parsec;
+package org.sodeja.parsec.combinator;
 
 import java.util.List;
 
 import org.sodeja.collections.ConsList;
 import org.sodeja.functional.Pair;
+import org.sodeja.parsec.Parser;
 
 public class DelegateParser<Tok, Res> implements Parser<Tok, Res> {
 	public Parser<Tok, Res> delegate;

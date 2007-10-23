@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.sodeja.collections.ConsList;
 import org.sodeja.functional.Pair;
-import org.sodeja.parsec.AbstractParser;
+import org.sodeja.parsec.combinator.AbstractParser;
 
 public class StringParser extends AbstractParser<String, String> {
 	public StringParser(String name) {

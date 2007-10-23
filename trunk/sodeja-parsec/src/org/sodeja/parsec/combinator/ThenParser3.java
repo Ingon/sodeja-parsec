@@ -1,22 +1,25 @@
-package org.sodeja.parsec;
+package org.sodeja.parsec.combinator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.sodeja.collections.ConsList;
-import org.sodeja.functional.Function2;
+import org.sodeja.functional.Function3;
 import org.sodeja.functional.Pair;
+import org.sodeja.parsec.Parser;
 
-public class ThenParser<Tok, Res, Res1, Res2> extends AbstractParser<Tok, Res> {
+public class ThenParser3<Tok, Res, Res1, Res2, Res3> extends AbstractParser<Tok, Res> {
 
 	private final Parser<Tok, Res1> first;
 	private final Parser<Tok, Res2> second;
-	private final Function2<Res, Res1, Res2> combinator;
+	private final Parser<Tok, Res3> third;
+	private final Function3<Res, Res1, Res2, Res3> combinator;
 	
-	public ThenParser(final String name, final Parser<Tok, Res1> first, final Parser<Tok, Res2> second, final Function2<Res, Res1, Res2> combinator) {
+	public ThenParser3(final String name, final Parser<Tok, Res1> first, final Parser<Tok, Res2> second, final Parser<Tok, Res3> third, final Function3<Res, Res1, Res2, Res3> combinator) {
 		super(name);
 		this.first = first;
 		this.second = second;
+		this.third = third;
 		this.combinator = combinator;
 	}
 
@@ -29,9 +32,13 @@ public class ThenParser<Tok, Res, Res1, Res2> extends AbstractParser<Tok, Res> {
 			List<Pair<Res2, ConsList<Tok>>> secondResult = second.execute(firstPair.second);
 			
 			for(Pair<Res2, ConsList<Tok>> secondPair : secondResult) {
-				result.add(new Pair<Res, ConsList<Tok>>(
-						combinator.execute(firstPair.first, secondPair.first), 
-						secondPair.second));
+				List<Pair<Res3, ConsList<Tok>>> thirdResult = third.execute(secondPair.second);
+				
+				for(Pair<Res3, ConsList<Tok>> thirdPair : thirdResult) {
+					result.add(new Pair<Res, ConsList<Tok>>(
+							combinator.execute(firstPair.first, secondPair.first, thirdPair.first),
+							thirdPair.second));
+				}
 			}
 		}
 		

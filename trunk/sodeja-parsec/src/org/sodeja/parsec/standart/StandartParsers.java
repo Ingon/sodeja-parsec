@@ -3,7 +3,7 @@ package org.sodeja.parsec.standart;
 import org.sodeja.functional.Predicate1;
 import org.sodeja.math.Rational;
 import org.sodeja.parsec.Parser;
-import org.sodeja.parsec.SatisfiesParser;
+import org.sodeja.parsec.combinator.SatisfiesParser;
 
 public class StandartParsers {
 	private StandartParsers() {

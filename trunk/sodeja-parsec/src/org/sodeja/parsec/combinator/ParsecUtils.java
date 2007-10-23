@@ -1,4 +1,4 @@
-package org.sodeja.parsec;
+package org.sodeja.parsec.combinator;
 
 import java.lang.reflect.Constructor;
 import java.util.List;
@@ -7,6 +7,7 @@ import org.sodeja.functional.Function1;
 import org.sodeja.functional.Function2;
 import org.sodeja.functional.Function3;
 import org.sodeja.functional.Function4;
+import org.sodeja.parsec.Parser;
 
 public class ParsecUtils {
 	private ParsecUtils() {

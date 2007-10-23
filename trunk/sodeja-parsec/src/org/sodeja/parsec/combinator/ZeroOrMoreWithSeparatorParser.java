@@ -1,17 +1,18 @@
-package org.sodeja.parsec;
+package org.sodeja.parsec.combinator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.sodeja.collections.ConsList;
 import org.sodeja.functional.Pair;
+import org.sodeja.parsec.Parser;
 
-public class OneOrMoreWithSeparator<Tok, Res, Res1> extends AbstractParser<Tok, List<Res>> {
+public class ZeroOrMoreWithSeparatorParser<Tok, Res, Res1> extends AbstractParser<Tok, List<Res>> {
 
 	private final Parser<Tok, Res> internal;
 	private final Parser<Tok, Res1> separator;
-	
-	public OneOrMoreWithSeparator(final String name, final Parser<Tok, Res> internal, final Parser<Tok, Res1> separator) {
+
+	public ZeroOrMoreWithSeparatorParser(final String name, final Parser<Tok, Res> internal, final Parser<Tok, Res1> separator) {
 		super(name);
 		this.internal = internal;
 		this.separator = separator;
@@ -24,7 +25,9 @@ public class OneOrMoreWithSeparator<Tok, Res, Res1> extends AbstractParser<Tok, 
 		
 		List<Pair<Res, ConsList<Tok>>> internalResult = internal.execute(tempTokens);
 		if(internalResult.isEmpty()) {
-			return EMPTY;
+			List<Pair<List<Res>, ConsList<Tok>>> result = new ArrayList<Pair<List<Res>, ConsList<Tok>>>();
+			result.add(new Pair<List<Res>, ConsList<Tok>>(null, tempTokens));
+			return result;
 		}
 		
 		// FIXME should inspect all possible results

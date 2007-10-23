@@ -1,10 +1,11 @@
-package org.sodeja.parsec;
+package org.sodeja.parsec.combinator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.sodeja.collections.ConsList;
 import org.sodeja.functional.Pair;
+import org.sodeja.parsec.Parser;
 
 public class AlternativeParser<Tok, Res> extends AbstractParser<Tok, Res> {
 	
