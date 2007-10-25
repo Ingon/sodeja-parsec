@@ -13,6 +13,11 @@ public abstract class TerminalSymbol {
 		}
 
 		@Override
+		public String toString() {
+			return " ";
+		}
+
+		@Override
 		public boolean equals(Object obj) {
 			return this == terminatorInstance;
 		}
@@ -34,6 +39,11 @@ public abstract class TerminalSymbol {
 		@Override
 		public Character value() {
 			return value;
+		}
+
+		@Override
+		public String toString() {
+			return String.valueOf(value);
 		}
 
 		@Override
