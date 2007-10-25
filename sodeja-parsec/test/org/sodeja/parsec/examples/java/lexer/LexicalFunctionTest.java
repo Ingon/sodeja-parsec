@@ -6,7 +6,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.sodeja.generator.Generator;
+import org.sodeja.generator.Gen;
 import org.sodeja.generator.Generators;
 import org.sodeja.parsec.examples.java.lexer.model.InputElement;
 import org.sodeja.parsec.examples.java.lexer.model.TerminalSymbol;
@@ -24,11 +24,11 @@ public class LexicalFunctionTest extends TestCase {
 		return readFully(Generators.readerGenerator(new FileReader(str)));
 	}
 	
-	private List<InputElement> readFully(Generator<Character> reader) {
+	private List<InputElement> readFully(Gen<Character> reader) {
 		TerminalSymbolFunction terminalFunctor = new TerminalSymbolFunction(reader);
-		Generator<TerminalSymbol> termGen = new Generator<TerminalSymbol>(terminalFunctor);
+		Gen<TerminalSymbol> termGen = new Gen<TerminalSymbol>(terminalFunctor);
 		
 		LexicalFunction lexicalFunctor = new LexicalFunction(termGen);
-		return Generators.readFully(new Generator<InputElement>(lexicalFunctor));
+		return Generators.readFully(new Gen<InputElement>(lexicalFunctor));
 	}
 }
