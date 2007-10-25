@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.sodeja.collections.ConsList;
 import org.sodeja.parsec.AbstractParser;
-import org.sodeja.parsec.ParseError;
 import org.sodeja.parsec.ParseSuccess;
 import org.sodeja.parsec.Parser;
 import org.sodeja.parsec.ParsingResult;
@@ -39,12 +38,15 @@ public class OneOrMoreWithSeparator<Tok, Res, Res1> extends AbstractParser<Tok, 
 		for(ParsingResult<Tok, Res1> separatorResult = separator.execute(tempTokens); 
 				isSuccess(separatorResult);separatorResult = separator.execute(tempTokens)) {
 			
+			ConsList<Tok> helpTokens = tempTokens;
+			
 			ParseSuccess<Tok, Res1> separatorSuccess = (ParseSuccess<Tok, Res1>) separatorResult;
 			tempTokens = separatorSuccess.tokens;
 			
 			internalResult = internal.execute(tempTokens);
 			if(isFailure(internalResult)) {
-				return new ParseError<Tok, List<Res>>("Expecting " + internal.getName());
+//				return new ParseError<Tok, List<Res>>("Expecting " + internal.getName());
+				return new ParseSuccess<Tok, List<Res>>(results, helpTokens);
 			}
 			
 			internalSuccess = (ParseSuccess<Tok, Res>) internalResult;
