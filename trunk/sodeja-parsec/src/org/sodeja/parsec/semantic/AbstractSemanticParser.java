@@ -13,7 +13,15 @@ public abstract class AbstractSemanticParser<T, K> {
 	
 	public final K parse(final List<T> tokensList) {
 		ConsList<T> tokens = ConsList.createList(tokensList);
-		ParsingResult<T, K> parseResults = getParser().execute(tokens);
+		return parseTokens(tokens);
+	}
+
+	public final K parseTokens(final ConsList<T> tokens) {
+		return applyParser(getParser(), tokens);
+	}
+	
+	public static final <T, K> K applyParser(Parser<T, K> parser, ConsList<T> tokens) {
+		ParsingResult<T, K> parseResults = parser.execute(tokens);
 		if(parseResults instanceof ParseSuccess) {
 			return ((ParseSuccess<T, K>) parseResults).result;
 		}

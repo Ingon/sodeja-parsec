@@ -13,7 +13,7 @@ public abstract class AbstractParser<Tok, Res> implements Parser<Tok, Res> {
 	}
 	
 	public ParsingResult<Tok, Res> execute(ConsList<Tok> tokens) {
-		if(tokens.isEmpty()) {
+		if(tokens == null || tokens.isEmpty()) {
 			return emptyError();
 		}
 		return executeDelegate(tokens);
