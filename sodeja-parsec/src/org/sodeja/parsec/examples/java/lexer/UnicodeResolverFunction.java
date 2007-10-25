@@ -4,6 +4,7 @@ import java.util.Deque;
 import java.util.LinkedList;
 
 import org.sodeja.functional.Maybe;
+import static org.sodeja.functional.Maybe.*;
 import org.sodeja.generator.Generator;
 import org.sodeja.generator.GeneratorFunction;
 import org.sodeja.lang.CharacterUtils;
@@ -21,17 +22,17 @@ public class UnicodeResolverFunction implements GeneratorFunction<Character> {
 	@Override
 	public Maybe<Character> execute() {
 		if(! buffer.isEmpty()) {
-			return Maybe.just(buffer.pollFirst());
+			return just(buffer.pollFirst());
 		}
 		
 		if(input == null) {
-			return Maybe.nothing();
+			return nothing();
 		}
 		
 		Character backslash = input.value();
 		if(backslash != '\\') {
 			input = input.next();
-			return Maybe.just(backslash);
+			return just(backslash);
 		}
 		
 		Generator<Character> ugen = input.next();
@@ -39,7 +40,7 @@ public class UnicodeResolverFunction implements GeneratorFunction<Character> {
 		if(u != 'u') {
 			buffer.offerLast(u);
 			input = ugen.next();
-			return Maybe.just(backslash);
+			return just(backslash);
 		}
 		
 		while(u == 'u') {
@@ -49,7 +50,7 @@ public class UnicodeResolverFunction implements GeneratorFunction<Character> {
 		
 		Character[] digits = readDigits(ugen, u);
 		
-		return Maybe.just(CharacterUtils.convertToUnicode(digits));
+		return just(CharacterUtils.convertToUnicode(digits));
 	}
 	
 	private Character[] readDigits(final Generator<Character> ugen, final Character u) {
