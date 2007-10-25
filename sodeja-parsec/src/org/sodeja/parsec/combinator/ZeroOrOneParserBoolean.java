@@ -16,12 +16,17 @@ public class ZeroOrOneParserBoolean<Tok> extends AbstractParser<Tok, Boolean> {
 	}
 
 	@Override
+	public ParsingResult<Tok, Boolean> execute(ConsList<Tok> tokens) {
+		return executeDelegate(tokens);
+	}
+
+	@Override
 	protected ParsingResult<Tok, Boolean> executeDelegate(ConsList<Tok> tokens) {
 		ParsingResult<Tok, ?> result = subparser.execute(tokens);
 		if(isSuccess(result)) {
-			return new ParseSuccess<Tok, Boolean>(Boolean.TRUE, ((ParseSuccess<Tok, ?>) result).tokens);
+			return success(Boolean.TRUE, ((ParseSuccess<Tok, ?>) result).tokens);
 		}
 
-		return new ParseSuccess<Tok, Boolean>(Boolean.FALSE, tokens);
+		return success(Boolean.FALSE, tokens);
 	}
 }

@@ -117,7 +117,7 @@ public class LexicalFunction implements GeneratorFunction<InputElement> {
 		}
 		
 		Generator<TerminalSymbol> tupleGen = input.tail();
-		if(tupleGen.head().isLineTerminator()) {
+		if(tupleGen == null || tupleGen.head().isLineTerminator()) {
 			input = tupleGen;
 			return just(operator(Operators.valueOfString(single)));
 		}
@@ -129,7 +129,7 @@ public class LexicalFunction implements GeneratorFunction<InputElement> {
 		}
 		
 		Generator<TerminalSymbol> tripleGen = tupleGen.tail();
-		if(tripleGen.head().isLineTerminator()) {
+		if(tripleGen == null || tripleGen.head().isLineTerminator()) {
 			input = tripleGen;
 			return just(operator(Operators.valueOfString(tuple)));
 		}
@@ -141,7 +141,7 @@ public class LexicalFunction implements GeneratorFunction<InputElement> {
 		}
 		
 		Generator<TerminalSymbol> quadGen = tupleGen.tail();
-		if(quadGen.head().isLineTerminator()) {
+		if(quadGen == null || quadGen.head().isLineTerminator()) {
 			input = quadGen;
 			return just(operator(Operators.valueOfString(triple)));
 		}

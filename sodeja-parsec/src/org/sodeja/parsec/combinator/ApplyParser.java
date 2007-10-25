@@ -22,7 +22,7 @@ public class ApplyParser<Tok, Res, Res1> extends AbstractParser<Tok, Res> {
 	protected ParsingResult<Tok, Res> executeDelegate(ConsList<Tok> tokens) {
 		ParsingResult<Tok, Res1> delegateResult = delegate.execute(tokens);
 		if(isFailure(delegateResult)) {
-			return createFailure(delegateResult);
+			return failure(delegateResult);
 		}
 		
 		ParseSuccess<Tok, Res1> successResult = (ParseSuccess<Tok, Res1>) delegateResult;

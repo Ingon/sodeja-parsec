@@ -27,7 +27,7 @@ public class OneOrMoreWithSeparator<Tok, Res, Res1> extends AbstractParser<Tok, 
 		
 		ParsingResult<Tok, Res> internalResult = internal.execute(tempTokens);
 		if(isFailure(internalResult)) {
-			return createFailure(internalResult);
+			return failure(internalResult);
 		}
 		
 		ParseSuccess<Tok, Res> internalSuccess = (ParseSuccess<Tok, Res>) internalResult;

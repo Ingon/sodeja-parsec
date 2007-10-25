@@ -53,8 +53,12 @@ public abstract class AbstractParser<Tok, Res> implements Parser<Tok, Res> {
 		return ((ParseError<?, ?>) result).error;
 	}
 	
-	protected ParsingResult<Tok, Res> createFailure(ParsingResult<?, ?> result) {
+	protected ParsingResult<Tok, Res> failure(ParsingResult<?, ?> result) {
 		return new ParseError<Tok, Res>(getFailure(result));
+	}
+	
+	protected ParsingResult<Tok, Res> success(Res res, ConsList<Tok> tokens) {
+		return new ParseSuccess<Tok, Res>(res, tokens);
 	}
 	
 	@Override
