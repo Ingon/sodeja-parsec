@@ -7,16 +7,16 @@ import java.util.Deque;
 import java.util.LinkedList;
 
 import org.sodeja.functional.Maybe;
-import org.sodeja.generator.Gen;
+import org.sodeja.generator.Generator;
 import org.sodeja.generator.GeneratorFunction;
 import org.sodeja.lang.CharacterUtils;
 
 public class UnicodeResolverFunction implements GeneratorFunction<Character> {
 	
-	private Gen<Character> input;
+	private Generator<Character> input;
 	private Deque<Character> buffer;
 	
-	public UnicodeResolverFunction(Gen<Character> input) {
+	public UnicodeResolverFunction(Generator<Character> input) {
 		this.input = input;
 		this.buffer = new LinkedList<Character>();
 	}
@@ -37,7 +37,7 @@ public class UnicodeResolverFunction implements GeneratorFunction<Character> {
 			return just(backslash);
 		}
 		
-		Gen<Character> ugen = input.tail();
+		Generator<Character> ugen = input.tail();
 		Character u = ugen.head();
 		if(u != 'u') {
 			buffer.offerLast(u);
@@ -55,8 +55,8 @@ public class UnicodeResolverFunction implements GeneratorFunction<Character> {
 		return just(CharacterUtils.convertToUnicode(digits));
 	}
 	
-	private Character[] readDigits(final Gen<Character> ugen, final Character u) {
-		Gen<Character> digitsGen = ugen;
+	private Character[] readDigits(final Generator<Character> ugen, final Character u) {
+		Generator<Character> digitsGen = ugen;
 		Character digit = u;
 		Character[] digits = new Character[4];
 		for(int i = 0;i < digits.length;i++) {

@@ -6,15 +6,15 @@ import static org.sodeja.parsec.examples.java.lexer.model.TerminalSymbol.input;
 import static org.sodeja.parsec.examples.java.lexer.model.TerminalSymbol.line;
 
 import org.sodeja.functional.Maybe;
-import org.sodeja.generator.Gen;
+import org.sodeja.generator.Generator;
 import org.sodeja.generator.GeneratorFunction;
 import org.sodeja.parsec.examples.java.lexer.model.TerminalSymbol;
 
 public class TerminalSymbolFunction implements GeneratorFunction<TerminalSymbol> {
 
-	private Gen<Character> input;
+	private Generator<Character> input;
 	
-	public TerminalSymbolFunction(Gen<Character> input) {
+	public TerminalSymbolFunction(Generator<Character> input) {
 		this.input = input;
 	}
 	
@@ -26,7 +26,7 @@ public class TerminalSymbolFunction implements GeneratorFunction<TerminalSymbol>
 		
 		Character ch = input.head();
 		if(ch == '\r') {
-			Gen<Character> temp = input.tail();
+			Generator<Character> temp = input.tail();
 			if(temp == null) {
 				input = null;
 				return just(line());

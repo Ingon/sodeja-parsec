@@ -13,7 +13,7 @@ import static org.sodeja.parsec.examples.java.lexer.model.Token.separator;
 import java.util.List;
 
 import org.sodeja.functional.Maybe;
-import org.sodeja.generator.Gen;
+import org.sodeja.generator.Generator;
 import org.sodeja.generator.GeneratorFunction;
 import org.sodeja.parsec.examples.java.lexer.model.BooleanLiterals;
 import org.sodeja.parsec.examples.java.lexer.model.InputElement;
@@ -24,9 +24,9 @@ import org.sodeja.parsec.examples.java.lexer.model.TerminalSymbol;
 
 public class LexicalFunction implements GeneratorFunction<InputElement> {
 	
-	private Gen<TerminalSymbol> input;
+	private Generator<TerminalSymbol> input;
 	
-	public LexicalFunction(Gen<TerminalSymbol> input) {
+	public LexicalFunction(Generator<TerminalSymbol> input) {
 		this.input = input;
 	}
 	
@@ -43,7 +43,7 @@ public class LexicalFunction implements GeneratorFunction<InputElement> {
 		}
 		
 		if(isCommentStart(value)) {
-			Gen<TerminalSymbol> next = input.tail();
+			Generator<TerminalSymbol> next = input.tail();
 			if(isSingleComment(next.head())) {
 				String text = readSingleComment();
 				return just(comment(text));
@@ -100,7 +100,7 @@ public class LexicalFunction implements GeneratorFunction<InputElement> {
 	
 	// TODO so ugly
 	private Maybe<InputElement> readOperator() {
-		Gen<TerminalSymbol> singleGen = input;
+		Generator<TerminalSymbol> singleGen = input;
 		
 		String single = String.valueOf(singleGen.head().value());
 		List<Operators> singleOps = Operators.filter(single);
@@ -108,7 +108,7 @@ public class LexicalFunction implements GeneratorFunction<InputElement> {
 			throw new IllegalArgumentException();
 		}
 		
-		Gen<TerminalSymbol> tupleGen = input.tail();
+		Generator<TerminalSymbol> tupleGen = input.tail();
 		if(tupleGen.head().isLineTerminator()) {
 			input = tupleGen;
 			return just(operator(Operators.valueOf(single)));
@@ -120,7 +120,7 @@ public class LexicalFunction implements GeneratorFunction<InputElement> {
 			return just(operator(Operators.valueOf(single)));
 		}
 		
-		Gen<TerminalSymbol> tripleGen = tupleGen.tail();
+		Generator<TerminalSymbol> tripleGen = tupleGen.tail();
 		if(tripleGen.head().isLineTerminator()) {
 			input = tripleGen;
 			return just(operator(Operators.valueOf(tuple)));
@@ -132,7 +132,7 @@ public class LexicalFunction implements GeneratorFunction<InputElement> {
 			return just(operator(Operators.valueOf(tuple)));
 		}
 		
-		Gen<TerminalSymbol> quadGen = tupleGen.tail();
+		Generator<TerminalSymbol> quadGen = tupleGen.tail();
 		if(quadGen.head().isLineTerminator()) {
 			input = quadGen;
 			return just(operator(Operators.valueOf(triple)));
