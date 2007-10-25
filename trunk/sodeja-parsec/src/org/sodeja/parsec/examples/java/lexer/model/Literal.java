@@ -110,4 +110,8 @@ public abstract class Literal<T> extends Token<T> {
 	public static InputElement nullLiteral() {
 		return NULL;
 	}
+
+	public static InputElement integer(String string) {
+		return new IntegerLiteral(new Integer(string));
+	}
 }
