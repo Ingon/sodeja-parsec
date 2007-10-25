@@ -3,11 +3,11 @@ package org.sodeja.parsec.examples.java.lexer;
 import java.io.StringReader;
 import java.util.List;
 
-import org.sodeja.collections.ListUtils;
-import org.sodeja.generator.Generator;
-import org.sodeja.generator.Generators;
-
 import junit.framework.TestCase;
+
+import org.sodeja.collections.ListUtils;
+import org.sodeja.generator.Gen;
+import org.sodeja.generator.Generators;
 
 public class UnicodeResolverFunctionTest extends TestCase {
 	public void testResolver() throws Exception {
@@ -25,8 +25,8 @@ public class UnicodeResolverFunctionTest extends TestCase {
 	}
 	
 	private List<Character> readFully(String str) throws Exception {
-		Generator<Character> reader = Generators.readerGenerator(new StringReader(str));
+		Gen<Character> reader = Generators.readerGenerator(new StringReader(str));
 		UnicodeResolverFunction functor = new UnicodeResolverFunction(reader);
-		return Generators.readFully(new Generator<Character>(functor));
+		return Generators.readFully(new Gen<Character>(functor));
 	}
 }

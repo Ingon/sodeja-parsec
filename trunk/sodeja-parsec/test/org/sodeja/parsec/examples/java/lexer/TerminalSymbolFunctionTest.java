@@ -10,7 +10,7 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.sodeja.collections.ListUtils;
-import org.sodeja.generator.Generator;
+import org.sodeja.generator.Gen;
 import org.sodeja.generator.Generators;
 import org.sodeja.parsec.examples.java.lexer.model.TerminalSymbol;
 
@@ -35,8 +35,8 @@ public class TerminalSymbolFunctionTest extends TestCase {
 		return readFully(Generators.readerGenerator(new FileReader(str)));
 	}
 
-	private List<TerminalSymbol> readFully(Generator<Character> reader) throws Exception {
+	private List<TerminalSymbol> readFully(Gen<Character> reader) throws Exception {
 		TerminalSymbolFunction terminalFunctor = new TerminalSymbolFunction(reader);
-		return Generators.readFully(new Generator<TerminalSymbol>(terminalFunctor));
+		return Generators.readFully(new Gen<TerminalSymbol>(terminalFunctor));
 	}
 }
