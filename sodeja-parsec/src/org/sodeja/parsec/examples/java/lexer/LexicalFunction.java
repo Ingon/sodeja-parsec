@@ -1,0 +1,203 @@
+package org.sodeja.parsec.examples.java.lexer;
+
+import static org.sodeja.functional.Maybe.just;
+import static org.sodeja.parsec.examples.java.lexer.model.InputElement.comment;
+import static org.sodeja.parsec.examples.java.lexer.model.InputElement.space;
+import static org.sodeja.parsec.examples.java.lexer.model.Literal.booleanLiteral;
+import static org.sodeja.parsec.examples.java.lexer.model.Literal.nullLiteral;
+import static org.sodeja.parsec.examples.java.lexer.model.Token.identifier;
+import static org.sodeja.parsec.examples.java.lexer.model.Token.keyword;
+import static org.sodeja.parsec.examples.java.lexer.model.Token.operator;
+import static org.sodeja.parsec.examples.java.lexer.model.Token.separator;
+
+import java.util.List;
+
+import org.sodeja.functional.Maybe;
+import org.sodeja.generator.Generator;
+import org.sodeja.generator.GeneratorFunction;
+import org.sodeja.parsec.examples.java.lexer.model.BooleanLiterals;
+import org.sodeja.parsec.examples.java.lexer.model.InputElement;
+import org.sodeja.parsec.examples.java.lexer.model.Keywords;
+import org.sodeja.parsec.examples.java.lexer.model.Operators;
+import org.sodeja.parsec.examples.java.lexer.model.Separators;
+import org.sodeja.parsec.examples.java.lexer.model.TerminalSymbol;
+
+public class LexicalFunction implements GeneratorFunction<InputElement> {
+	
+	private Generator<TerminalSymbol> input;
+	
+	public LexicalFunction(Generator<TerminalSymbol> input) {
+		this.input = input;
+	}
+	
+	@Override
+	public Maybe<InputElement> execute() {
+		if(input == null) {
+			return Maybe.nothing();
+		}
+		
+		TerminalSymbol value = input.value();
+		if(isWhitespace(value)) {
+			readTillNonWhiteSpace();
+			return just(space());
+		}
+		
+		if(isCommentStart(value)) {
+			Generator<TerminalSymbol> next = input.next();
+			if(isSingleComment(next.value())) {
+				String text = readSingleComment();
+				return just(comment(text));
+			}
+			
+			if(isMultyComment(next.value())) {
+				String text = readMultyComment();
+				return just(comment(text));
+			}
+		}
+		
+		Character ch = value.value();
+		if(Character.isJavaIdentifierStart(ch)) {
+			return readIdentifier();
+		}
+		
+		if(Character.isDigit(ch)) {
+			return readNumber();
+		}
+		
+		Separators sep = Separators.valueOf(ch);
+		if(sep != null) {
+			input = input.next();
+			return just(separator(sep));
+		}
+		
+		return readOperator();
+	}
+
+	private Maybe<InputElement> readIdentifier() {
+		String val = readIdentifierText();
+		
+		Keywords keyword = Keywords.find(val);
+		if(keyword != null) {
+			return just(keyword(keyword));
+		}
+		
+		BooleanLiterals bool = BooleanLiterals.find(val);
+		if(bool != null) {
+			return just(booleanLiteral(bool));
+		}
+		
+		// TODO not very good. Clearly some other form is needed
+		if("null".equals(val)) {
+			return just(nullLiteral());
+		}
+		
+		return just(identifier(val));
+	}
+
+	private Maybe<InputElement> readNumber() {
+		throw new UnsupportedOperationException();
+	}
+	
+	// TODO so ugly
+	private Maybe<InputElement> readOperator() {
+		Generator<TerminalSymbol> singleGen = input;
+		
+		String single = String.valueOf(singleGen.value().value());
+		List<Operators> singleOps = Operators.filter(single);
+		if(singleOps.size() == 0) {
+			throw new IllegalArgumentException();
+		}
+		
+		Generator<TerminalSymbol> tupleGen = input.next();
+		if(tupleGen.value().isLineTerminator()) {
+			input = tupleGen;
+			return just(operator(Operators.valueOf(single)));
+		}
+		String tuple = single + String.valueOf(tupleGen.value().value());
+		List<Operators> tupleOps = Operators.filter(tuple);
+		if(tupleOps.size() == 0) {
+			input = tupleGen;
+			return just(operator(Operators.valueOf(single)));
+		}
+		
+		Generator<TerminalSymbol> tripleGen = tupleGen.next();
+		if(tripleGen.value().isLineTerminator()) {
+			input = tripleGen;
+			return just(operator(Operators.valueOf(tuple)));
+		}
+		String triple = tuple + String.valueOf(tripleGen.value().value());
+		List<Operators> tripleOps = Operators.filter(triple);
+		if(tripleOps.size() == 0) {
+			input = tripleGen;
+			return just(operator(Operators.valueOf(tuple)));
+		}
+		
+		Generator<TerminalSymbol> quadGen = tupleGen.next();
+		if(quadGen.value().isLineTerminator()) {
+			input = quadGen;
+			return just(operator(Operators.valueOf(triple)));
+		}
+		String quad = tuple + String.valueOf(quadGen.value().value());
+		List<Operators> quadOps = Operators.filter(quad);
+		if(quadOps.size() == 0) {
+			input = quadGen;
+			return just(operator(Operators.valueOf(triple)));
+		}
+		
+		if(quadOps.size() > 1) {
+			throw new IllegalArgumentException();
+		}
+		
+		return just(operator(Operators.valueOf(quad)));
+	}
+
+	private String readIdentifierText() {
+		StringBuilder sb = new StringBuilder();
+		
+		while(input != null && (! input.value().isLineTerminator()) && (Character.isJavaIdentifierPart(input.value().value()))) {
+			sb.append(input.value().value());
+			input = input.next();
+		}
+		
+		return sb.toString();
+	}
+
+	private void readTillNonWhiteSpace() {
+		input = input.next();
+		while(input != null && isWhitespace(input.value())) {
+			input = input.next();
+		}
+	}
+
+	private String readSingleComment() {
+		StringBuilder sb = new StringBuilder();
+		
+		while(! input.value().isLineTerminator()) {
+			sb.append(input.value().value());
+			input = input.next();
+		}
+		
+		return sb.toString();
+	}
+
+	private String readMultyComment() {
+		throw new UnsupportedOperationException();
+	}
+
+	
+	private boolean isWhitespace(TerminalSymbol ts) {
+		return ts.isLineTerminator() || Character.isWhitespace(ts.value());
+	}
+	
+	private boolean isCommentStart(TerminalSymbol ts) {
+		return (! ts.isLineTerminator()) && ts.value() == '/';
+	}
+
+	private boolean isSingleComment(TerminalSymbol ts) {
+		return isCommentStart(ts);
+	}
+	
+	private boolean isMultyComment(TerminalSymbol ts) {
+		return (! ts.isLineTerminator()) && ts.value() == '*';
+	}
+}
