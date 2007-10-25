@@ -30,28 +30,28 @@ public class ThenParser4<Tok, Res, Res1, Res2, Res3, Res4> extends AbstractParse
 	protected ParsingResult<Tok, Res> executeDelegate(ConsList<Tok> tokens) {
 		ParsingResult<Tok, Res1> firstResult = first.execute(tokens);
 		if(isFailure(firstResult)) {
-			return createFailure(firstResult);
+			return failure(firstResult);
 		}
 		
 		ParseSuccess<Tok, Res1> firstSuccess = (ParseSuccess<Tok, Res1>) firstResult;
 		
 		ParsingResult<Tok, Res2> secondResult = second.execute(firstSuccess.tokens);
 		if(isFailure(secondResult)) {
-			return createFailure(secondResult);
+			return failure(secondResult);
 		}
 		
 		ParseSuccess<Tok, Res2> secondSuccess = (ParseSuccess<Tok, Res2>) secondResult;
 		
 		ParsingResult<Tok, Res3> thirdResult = third.execute(secondSuccess.tokens);
 		if(isFailure(thirdResult)) {
-			return createFailure(thirdResult);
+			return failure(thirdResult);
 		}
 		
 		ParseSuccess<Tok, Res3> thirdSuccess = (ParseSuccess<Tok, Res3>) thirdResult;
 
 		ParsingResult<Tok, Res4> fourthResult = fourth.execute(thirdSuccess.tokens);
 		if(isFailure(fourthResult)) {
-			return createFailure(fourthResult);
+			return failure(fourthResult);
 		}
 		
 		ParseSuccess<Tok, Res4> fourthSuccess = (ParseSuccess<Tok, Res4>) fourthResult;

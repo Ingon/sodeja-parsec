@@ -24,14 +24,14 @@ public class ThenParser<Tok, Res, Res1, Res2> extends AbstractParser<Tok, Res> {
 	protected ParsingResult<Tok, Res> executeDelegate(ConsList<Tok> tokens) {
 		ParsingResult<Tok, Res1> firstResult = first.execute(tokens);
 		if(isFailure(firstResult)) {
-			return createFailure(firstResult);
+			return failure(firstResult);
 		}
 		
 		ParseSuccess<Tok, Res1> firstSuccess = (ParseSuccess<Tok, Res1>) firstResult;
 		
 		ParsingResult<Tok, Res2> secondResult = second.execute(firstSuccess.tokens);
 		if(isFailure(secondResult)) {
-			return createFailure(secondResult);
+			return failure(secondResult);
 		}
 		
 		ParseSuccess<Tok, Res2> secondSuccess = (ParseSuccess<Tok, Res2>) secondResult;

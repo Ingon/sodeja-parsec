@@ -16,6 +16,11 @@ public class ZeroOrOneParser<Tok, Res> extends AbstractParser<Tok, Res> {
 	}
 
 	@Override
+	public ParsingResult<Tok, Res> execute(ConsList<Tok> tokens) {
+		return executeDelegate(tokens);
+	}
+
+	@Override
 	protected ParsingResult<Tok, Res> executeDelegate(ConsList<Tok> tokens) {
 		ParsingResult<Tok, Res> result = subparser.execute(tokens);
 		if(isSuccess(result)) {
