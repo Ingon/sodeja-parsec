@@ -1,15 +1,18 @@
 package org.sodeja.parsec.examples.java.lexer;
 
+import static org.sodeja.parsec.examples.java.lexer.model.TerminalSymbol.input;
+import static org.sodeja.parsec.examples.java.lexer.model.TerminalSymbol.line;
+
+import java.io.FileReader;
 import java.io.StringReader;
 import java.util.List;
+
+import junit.framework.TestCase;
 
 import org.sodeja.collections.ListUtils;
 import org.sodeja.generator.Generator;
 import org.sodeja.generator.Generators;
 import org.sodeja.parsec.examples.java.lexer.model.TerminalSymbol;
-import static org.sodeja.parsec.examples.java.lexer.model.TerminalSymbol.*;
-
-import junit.framework.TestCase;
 
 public class TerminalSymbolFunctionTest extends TestCase {
 	public void testTokenize() throws Exception {
@@ -20,8 +23,19 @@ public class TerminalSymbolFunctionTest extends TestCase {
 		assertEquals(ListUtils.asList(input('a'), line(), input('b')), readFully("a\r\nb"));
 	}
 
+	public void testTokenize1() throws Exception {
+		System.out.println(readFullyFile("src/org/sodeja/parsec/examples/java/JavaMain.java"));
+	}
+		
 	private List<TerminalSymbol> readFully(String str) throws Exception {
-		Generator<Character> reader = Generators.readerGenerator(new StringReader(str));
+		return readFully(Generators.readerGenerator(new StringReader(str)));
+	}
+
+	private List<TerminalSymbol> readFullyFile(String str) throws Exception {
+		return readFully(Generators.readerGenerator(new FileReader(str)));
+	}
+
+	private List<TerminalSymbol> readFully(Generator<Character> reader) throws Exception {
 		TerminalSymbolFunction terminalFunctor = new TerminalSymbolFunction(reader);
 		return Generators.readFully(new Generator<TerminalSymbol>(terminalFunctor));
 	}
