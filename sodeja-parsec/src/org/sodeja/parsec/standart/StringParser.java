@@ -15,7 +15,7 @@ public class StringParser extends AbstractParser<String, String> {
 	protected ParsingResult<String, String> executeDelegate(ConsList<String> tokens) {
 		String token = tokens.get(0);
 		if(token.startsWith("\"") && token.endsWith("\"")) {
-			return new ParseSuccess<String, String>(token.substring(1, token.length() - 1), tokens.getTail());
+			return new ParseSuccess<String, String>(token.substring(1, token.length() - 1), tokens.tail());
 		}
 		
 		return new ParseError<String, String>("Expects an string in \"...\" form!");

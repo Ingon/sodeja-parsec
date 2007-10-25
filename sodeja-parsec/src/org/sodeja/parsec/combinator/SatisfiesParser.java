@@ -19,7 +19,7 @@ public class SatisfiesParser<Tok> extends AbstractParser<Tok, Tok> {
 	@Override
 	protected ParsingResult<Tok, Tok> executeDelegate(ConsList<Tok> tokens) {
 		if(functor.execute(tokens.get(0))) {
-			return new ParseSuccess<Tok, Tok>(tokens.getHead(), tokens.getTail());
+			return new ParseSuccess<Tok, Tok>(tokens.head(), tokens.tail());
 		}
 
 		return new ParseError<Tok, Tok>("Expecting " + getName());

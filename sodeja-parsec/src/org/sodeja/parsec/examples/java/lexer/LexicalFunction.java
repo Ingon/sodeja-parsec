@@ -13,7 +13,7 @@ import static org.sodeja.parsec.examples.java.lexer.model.Token.separator;
 import java.util.List;
 
 import org.sodeja.functional.Maybe;
-import org.sodeja.generator.Generator;
+import org.sodeja.generator.Gen;
 import org.sodeja.generator.GeneratorFunction;
 import org.sodeja.parsec.examples.java.lexer.model.BooleanLiterals;
 import org.sodeja.parsec.examples.java.lexer.model.InputElement;
@@ -24,9 +24,9 @@ import org.sodeja.parsec.examples.java.lexer.model.TerminalSymbol;
 
 public class LexicalFunction implements GeneratorFunction<InputElement> {
 	
-	private Generator<TerminalSymbol> input;
+	private Gen<TerminalSymbol> input;
 	
-	public LexicalFunction(Generator<TerminalSymbol> input) {
+	public LexicalFunction(Gen<TerminalSymbol> input) {
 		this.input = input;
 	}
 	
@@ -36,20 +36,20 @@ public class LexicalFunction implements GeneratorFunction<InputElement> {
 			return Maybe.nothing();
 		}
 		
-		TerminalSymbol value = input.value();
+		TerminalSymbol value = input.head();
 		if(isWhitespace(value)) {
 			readTillNonWhiteSpace();
 			return just(space());
 		}
 		
 		if(isCommentStart(value)) {
-			Generator<TerminalSymbol> next = input.next();
-			if(isSingleComment(next.value())) {
+			Gen<TerminalSymbol> next = input.tail();
+			if(isSingleComment(next.head())) {
 				String text = readSingleComment();
 				return just(comment(text));
 			}
 			
-			if(isMultyComment(next.value())) {
+			if(isMultyComment(next.head())) {
 				String text = readMultyComment();
 				return just(comment(text));
 			}
@@ -66,7 +66,7 @@ public class LexicalFunction implements GeneratorFunction<InputElement> {
 		
 		Separators sep = Separators.valueOf(ch);
 		if(sep != null) {
-			input = input.next();
+			input = input.tail();
 			return just(separator(sep));
 		}
 		
@@ -100,44 +100,44 @@ public class LexicalFunction implements GeneratorFunction<InputElement> {
 	
 	// TODO so ugly
 	private Maybe<InputElement> readOperator() {
-		Generator<TerminalSymbol> singleGen = input;
+		Gen<TerminalSymbol> singleGen = input;
 		
-		String single = String.valueOf(singleGen.value().value());
+		String single = String.valueOf(singleGen.head().value());
 		List<Operators> singleOps = Operators.filter(single);
 		if(singleOps.size() == 0) {
 			throw new IllegalArgumentException();
 		}
 		
-		Generator<TerminalSymbol> tupleGen = input.next();
-		if(tupleGen.value().isLineTerminator()) {
+		Gen<TerminalSymbol> tupleGen = input.tail();
+		if(tupleGen.head().isLineTerminator()) {
 			input = tupleGen;
 			return just(operator(Operators.valueOf(single)));
 		}
-		String tuple = single + String.valueOf(tupleGen.value().value());
+		String tuple = single + String.valueOf(tupleGen.head().value());
 		List<Operators> tupleOps = Operators.filter(tuple);
 		if(tupleOps.size() == 0) {
 			input = tupleGen;
 			return just(operator(Operators.valueOf(single)));
 		}
 		
-		Generator<TerminalSymbol> tripleGen = tupleGen.next();
-		if(tripleGen.value().isLineTerminator()) {
+		Gen<TerminalSymbol> tripleGen = tupleGen.tail();
+		if(tripleGen.head().isLineTerminator()) {
 			input = tripleGen;
 			return just(operator(Operators.valueOf(tuple)));
 		}
-		String triple = tuple + String.valueOf(tripleGen.value().value());
+		String triple = tuple + String.valueOf(tripleGen.head().value());
 		List<Operators> tripleOps = Operators.filter(triple);
 		if(tripleOps.size() == 0) {
 			input = tripleGen;
 			return just(operator(Operators.valueOf(tuple)));
 		}
 		
-		Generator<TerminalSymbol> quadGen = tupleGen.next();
-		if(quadGen.value().isLineTerminator()) {
+		Gen<TerminalSymbol> quadGen = tupleGen.tail();
+		if(quadGen.head().isLineTerminator()) {
 			input = quadGen;
 			return just(operator(Operators.valueOf(triple)));
 		}
-		String quad = tuple + String.valueOf(quadGen.value().value());
+		String quad = tuple + String.valueOf(quadGen.head().value());
 		List<Operators> quadOps = Operators.filter(quad);
 		if(quadOps.size() == 0) {
 			input = quadGen;
@@ -154,27 +154,27 @@ public class LexicalFunction implements GeneratorFunction<InputElement> {
 	private String readIdentifierText() {
 		StringBuilder sb = new StringBuilder();
 		
-		while(input != null && (! input.value().isLineTerminator()) && (Character.isJavaIdentifierPart(input.value().value()))) {
-			sb.append(input.value().value());
-			input = input.next();
+		while(input != null && (! input.head().isLineTerminator()) && (Character.isJavaIdentifierPart(input.head().value()))) {
+			sb.append(input.head().value());
+			input = input.tail();
 		}
 		
 		return sb.toString();
 	}
 
 	private void readTillNonWhiteSpace() {
-		input = input.next();
-		while(input != null && isWhitespace(input.value())) {
-			input = input.next();
+		input = input.tail();
+		while(input != null && isWhitespace(input.head())) {
+			input = input.tail();
 		}
 	}
 
 	private String readSingleComment() {
 		StringBuilder sb = new StringBuilder();
 		
-		while(! input.value().isLineTerminator()) {
-			sb.append(input.value().value());
-			input = input.next();
+		while(! input.head().isLineTerminator()) {
+			sb.append(input.head().value());
+			input = input.tail();
 		}
 		
 		return sb.toString();
