@@ -6,7 +6,7 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.sodeja.collections.ListUtils;
-import org.sodeja.generator.Gen;
+import org.sodeja.generator.Generator;
 import org.sodeja.generator.Generators;
 
 public class UnicodeResolverFunctionTest extends TestCase {
@@ -25,8 +25,8 @@ public class UnicodeResolverFunctionTest extends TestCase {
 	}
 	
 	private List<Character> readFully(String str) throws Exception {
-		Gen<Character> reader = Generators.readerGenerator(new StringReader(str));
+		Generator<Character> reader = Generators.readerGenerator(new StringReader(str));
 		UnicodeResolverFunction functor = new UnicodeResolverFunction(reader);
-		return Generators.readFully(new Gen<Character>(functor));
+		return Generators.readFully(new Generator<Character>(functor));
 	}
 }
