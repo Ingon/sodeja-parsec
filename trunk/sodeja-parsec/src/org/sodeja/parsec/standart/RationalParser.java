@@ -15,10 +15,10 @@ public class RationalParser extends AbstractParser<String, Rational> {
 	@SuppressWarnings("unchecked")
 	@Override
 	protected ParsingResult<String, Rational> executeDelegate(ConsList<String> tokens) {
-		String head = tokens.getHead();
+		String head = tokens.head();
 		try {
 			Rational value = new Rational(head);
-			return new ParseSuccess<String, Rational>(value, tokens.getTail());
+			return new ParseSuccess<String, Rational>(value, tokens.tail());
 		} catch(NumberFormatException exc) {
 			return new ParseError<String, Rational>("The token was not an rational!");
 		}
