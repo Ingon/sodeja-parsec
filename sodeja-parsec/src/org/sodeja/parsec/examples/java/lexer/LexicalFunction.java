@@ -18,6 +18,7 @@ import org.sodeja.generator.GeneratorFunction;
 import org.sodeja.parsec.examples.java.lexer.model.BooleanLiterals;
 import org.sodeja.parsec.examples.java.lexer.model.InputElement;
 import org.sodeja.parsec.examples.java.lexer.model.Keywords;
+import org.sodeja.parsec.examples.java.lexer.model.Literal;
 import org.sodeja.parsec.examples.java.lexer.model.Operators;
 import org.sodeja.parsec.examples.java.lexer.model.Separators;
 import org.sodeja.parsec.examples.java.lexer.model.TerminalSymbol;
@@ -95,7 +96,14 @@ public class LexicalFunction implements GeneratorFunction<InputElement> {
 	}
 
 	private Maybe<InputElement> readNumber() {
-		throw new UnsupportedOperationException();
+		StringBuilder sb = new StringBuilder();
+		
+		while(input != null && (! input.head().isLineTerminator()) && (Character.isDigit(input.head().value()))) {
+			sb.append(input.head().value());
+			input = input.tail();
+		}
+		
+		return Maybe.just(Literal.integer(sb.toString()));
 	}
 	
 	// TODO so ugly
@@ -111,44 +119,44 @@ public class LexicalFunction implements GeneratorFunction<InputElement> {
 		Generator<TerminalSymbol> tupleGen = input.tail();
 		if(tupleGen.head().isLineTerminator()) {
 			input = tupleGen;
-			return just(operator(Operators.valueOf(single)));
+			return just(operator(Operators.valueOfString(single)));
 		}
 		String tuple = single + String.valueOf(tupleGen.head().value());
 		List<Operators> tupleOps = Operators.filter(tuple);
 		if(tupleOps.size() == 0) {
 			input = tupleGen;
-			return just(operator(Operators.valueOf(single)));
+			return just(operator(Operators.valueOfString(single)));
 		}
 		
 		Generator<TerminalSymbol> tripleGen = tupleGen.tail();
 		if(tripleGen.head().isLineTerminator()) {
 			input = tripleGen;
-			return just(operator(Operators.valueOf(tuple)));
+			return just(operator(Operators.valueOfString(tuple)));
 		}
 		String triple = tuple + String.valueOf(tripleGen.head().value());
 		List<Operators> tripleOps = Operators.filter(triple);
 		if(tripleOps.size() == 0) {
 			input = tripleGen;
-			return just(operator(Operators.valueOf(tuple)));
+			return just(operator(Operators.valueOfString(tuple)));
 		}
 		
 		Generator<TerminalSymbol> quadGen = tupleGen.tail();
 		if(quadGen.head().isLineTerminator()) {
 			input = quadGen;
-			return just(operator(Operators.valueOf(triple)));
+			return just(operator(Operators.valueOfString(triple)));
 		}
 		String quad = tuple + String.valueOf(quadGen.head().value());
 		List<Operators> quadOps = Operators.filter(quad);
 		if(quadOps.size() == 0) {
 			input = quadGen;
-			return just(operator(Operators.valueOf(triple)));
+			return just(operator(Operators.valueOfString(triple)));
 		}
 		
 		if(quadOps.size() > 1) {
 			throw new IllegalArgumentException();
 		}
 		
-		return just(operator(Operators.valueOf(quad)));
+		return just(operator(Operators.valueOfString(quad)));
 	}
 
 	private String readIdentifierText() {

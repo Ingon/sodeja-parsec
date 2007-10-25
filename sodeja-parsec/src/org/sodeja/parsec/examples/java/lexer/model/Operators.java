@@ -22,6 +22,7 @@ import org.sodeja.lang.StringUtils;
  * D -> /
  * H -> ^
  * V -> %
+ * Z -> @
  */
 public enum Operators {
 	E   ("="),
@@ -60,7 +61,8 @@ public enum Operators {
 	GG  (">>"),
 	GGE (">>="),
 	GGG (">>>"),
-	GGGE(">>>=");
+	GGGE(">>>="),
+	Z   ("@");
 	
 	private final String value;
 	
@@ -86,5 +88,15 @@ public enum Operators {
 			}
 		}
 		return result;
+	}
+	
+	public static Operators valueOfString(String str) {
+		Operators[] values = values();
+		for(int i = 0;i < values.length;i++) {
+			if(values[i].value.equals(str)) {
+				return values[i];
+			}
+		}
+		throw new IllegalArgumentException();
 	}
 }
