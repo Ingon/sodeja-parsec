@@ -76,14 +76,22 @@ public class LexerHelper {
 	}
 	
 	public static <T> void readString(AbstractLexer<T> lexer, char initial) {
+		readText(lexer, initial);
+	}
+
+	public static <T> void readQString(AbstractLexer<T> lexer, char initial) {
+		readText(lexer, initial);
+	}
+	
+	private static <T> void readText(AbstractLexer<T> lexer, char initial) {
 		lexer.helper.setLength(0);
-		lexer.helper.append(initial);
+		lexer.helper.append('\"');
 
 		Character ch = null;
-		for(ch = lexer.readChar(); ch != '\"' ; ch = lexer.readChar()) {
+		for(ch = lexer.readChar(); ch != initial ; ch = lexer.readChar()) {
 			if(ch == '\\') {
 				Character ch1 = lexer.readChar();
-				if(ch1 == '\"') {
+				if(ch1 == initial) {
 					lexer.helper.append(ch1);
 					continue;
 				}
@@ -95,4 +103,5 @@ public class LexerHelper {
 		
 		lexer.tokens.add(lexer.createTokenFrom(lexer.helper.toString()));
 	}
+	
 }
