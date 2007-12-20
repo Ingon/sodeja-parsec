@@ -42,6 +42,14 @@ public class ParsecCombinators {
 		return new ApplyParser<Tok, Res, Res1>(name, parser, functor);
 	}
 
+	public static <Tok, Res> Parser<Tok, Res> applyJust(String name, Parser<Tok, Res> parser) {
+		return new ApplyParser<Tok, Res, Res>(name, parser, new Function1<Res, Res>() {
+			@Override
+			public Res execute(Res p) {
+				return p;
+			}});
+	}
+	
 	public static <Tok, Res, Res1> Parser<Tok, Res> applyCons(final String name, Parser<Tok, Res1> parser, final Class<Res> clazz) {
 		return apply(name, parser, new Function1<Res, Res1>() {
 			@Override
