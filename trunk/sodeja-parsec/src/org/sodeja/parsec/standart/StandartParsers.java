@@ -12,6 +12,10 @@ public class StandartParsers {
 	public static Parser<String, String> justString(final String name) {
 		return new StringParser(name);
 	}
+
+	public static Parser<String, String> justStartEnd(final String name, final String startEnd) {
+		return new StartEndParser(name, startEnd);
+	}
 	
 	public static Parser<String, String> justText(final String name) {
 		return new SatisfiesParser<String>(name + "_PARSER", new Predicate1<String>() {
