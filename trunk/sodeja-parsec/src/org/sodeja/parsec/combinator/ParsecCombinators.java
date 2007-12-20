@@ -68,6 +68,17 @@ public class ParsecCombinators {
 				return alternative("?", p1, p2);
 			}});
 	}
+
+	public static <Tok, Res> Parser<Tok, Res> oneOf1(String name, Parser... parsers) {
+		return ArrayUtils.foldr(parsers, null, new Function2<Parser<Tok, Res>, Parser<Tok, Res>, Parser<Tok, Res>>() {
+			@Override
+			public Parser<Tok, Res> execute(Parser<Tok, Res> p1, Parser<Tok, Res> p2) {
+				if(p2 == null) {
+					return p1;
+				}
+				return alternative("?", p1, p2);
+			}});
+	}
 	
 	public static <Tok, Res, Res1, Res2> Parser<Tok, Res> thenParser(String name, 
 			Parser<Tok, Res1> first, 
@@ -147,6 +158,18 @@ public class ParsecCombinators {
 			@Override
 			public Res execute(Res1 p1, Res2 p2, Res3 p3) {
 				return makeInstance(name, clazz, p1, p2);
+			}});
+	}
+
+	public static <Tok, Res, Res1, Res2, Res3> Parser<Tok, Res> thenParser3Cons13(final String name, 
+			Parser<Tok, Res1> first, 
+			Parser<Tok, Res2> second, 
+			Parser<Tok, Res3> third, 
+			final Class<Res> clazz) {
+		return thenParser3(name, first, second, third, new Function3<Res, Res1, Res2, Res3>() {
+			@Override
+			public Res execute(Res1 p1, Res2 p2, Res3 p3) {
+				return makeInstance(name, clazz, p1, p3);
 			}});
 	}
 	
