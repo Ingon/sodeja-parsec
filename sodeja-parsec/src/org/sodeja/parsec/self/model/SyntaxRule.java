@@ -1,4 +1,4 @@
-package org.sodeja.parsec.self;
+package org.sodeja.parsec.self.model;
 
 import java.util.List;
 
