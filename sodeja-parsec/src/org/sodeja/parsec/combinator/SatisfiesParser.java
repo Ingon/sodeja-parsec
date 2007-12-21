@@ -22,6 +22,6 @@ public class SatisfiesParser<Tok> extends AbstractParser<Tok, Tok> {
 			return new ParseSuccess<Tok, Tok>(tokens.head(), tokens.tail());
 		}
 
-		return new ParseError<Tok, Tok>("Expecting " + getName());
+		return new ParseError<Tok, Tok>("Expecting " + getName(), tokens);
 	}
 }

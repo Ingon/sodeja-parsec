@@ -21,6 +21,6 @@ public class ClassParser extends AbstractParser<Token<?>, Token<?>> {
 		if(clazz.isInstance(tokens.head())) {
 			return new ParseSuccess<Token<?>, Token<?>>(tokens.head(), tokens.tail());
 		}
-		return new ParseError<Token<?>, Token<?>>("Expecting " + clazz);
+		return new ParseError<Token<?>, Token<?>>("Expecting " + clazz, tokens);
 	}
 }
