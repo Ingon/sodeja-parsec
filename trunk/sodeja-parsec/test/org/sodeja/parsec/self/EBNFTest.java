@@ -57,7 +57,7 @@ public class EBNFTest extends TestCase {
 			"'class': 'com.icw.phr.fedex.FedexCall', " +
 			"'serviceName': 'service1', " +
 			"'methodName': 'method1', " + 
-			"'params:' ['someScope1']}";
+			"'params': ['someScope1', {}, {'val' : true}]}";
 		
 		JSONLexer lexer = new JSONLexer(new StringReader(jsonTest));
 		List<String> jsonTokens = lexer.tokenize();
@@ -69,6 +69,12 @@ public class EBNFTest extends TestCase {
 
 		System.out.println("Node: " + node);
 	}
+	
+//	private Object applyRules(Node node) {
+//		if(node instanceof RuleNode) {
+//			applyRuleNode((RuleNode) node);
+//		} else if(node instanceof )
+//	}
 	
 	public static void main(String[] args) {
 		new EBNFTest().testJson();
