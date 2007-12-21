@@ -7,9 +7,21 @@ import java.util.List;
 
 import org.sodeja.parsec.Parser;
 import org.sodeja.parsec.combinator.DelegateParser;
+import org.sodeja.parsec.self.model.Definition;
+import org.sodeja.parsec.self.model.Factor;
+import org.sodeja.parsec.self.model.Grouped;
+import org.sodeja.parsec.self.model.MetaIdentifier;
+import org.sodeja.parsec.self.model.Optional;
+import org.sodeja.parsec.self.model.Primary;
+import org.sodeja.parsec.self.model.Repeated;
+import org.sodeja.parsec.self.model.SpecialSequence;
+import org.sodeja.parsec.self.model.Syntax;
+import org.sodeja.parsec.self.model.SyntaxRule;
+import org.sodeja.parsec.self.model.Term;
+import org.sodeja.parsec.self.model.TerminalString;
 import org.sodeja.parsec.semantic.AbstractSemanticParser;
 
-public class EBNFParser extends AbstractSemanticParser<String, Syntax> {
+public class EBNFGrammarParser extends AbstractSemanticParser<String, Syntax> {
 
 	private Parser<String, Integer> INTEGER = simpleIntegerParser("INTEGER");
 	
@@ -51,13 +63,13 @@ public class EBNFParser extends AbstractSemanticParser<String, Syntax> {
 	
 	private Parser<String, List<Definition>> DEFINITIONS = oneOrMoreSep("DEFINITIONS", DEFINITION, literal("|"));
 	
-	private Parser<String, SyntaxRule> SYNTAX_RULE = thenParser3Cons13("SYNTAX_RULE", META_IDENTIFIER, literal("="), DEFINITIONS, SyntaxRule.class);
+	private Parser<String, SyntaxRule> SYNTAX_RULE = thenParser4Cons13("SYNTAX_RULE", META_IDENTIFIER, literal("="), DEFINITIONS, literal(";"), SyntaxRule.class);
 	
 	private Parser<String, List<SyntaxRule>> SYNTAX_RULES = oneOrMore("SYNTAX_RULES", SYNTAX_RULE);
 	
 	private Parser<String, Syntax> SYNTAX = applyCons("SYNTAX", SYNTAX_RULES, Syntax.class);
 	
-	public EBNFParser() {
+	public EBNFGrammarParser() {
 		DEFINITIONS_LIST.delegate = DEFINITIONS;
 	}
 

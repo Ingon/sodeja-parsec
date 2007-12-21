@@ -5,9 +5,9 @@ import java.io.Reader;
 import org.sodeja.parsec.lexer.AbstractLexer;
 import org.sodeja.parsec.lexer.LexerHelper;
 
-public class EBNFLexer extends AbstractLexer<String> {
+public class EBNFGrammarLexer extends AbstractLexer<String> {
 
-	public EBNFLexer(Reader originalReader) {
+	public EBNFGrammarLexer(Reader originalReader) {
 		super(originalReader);
 	}
 
