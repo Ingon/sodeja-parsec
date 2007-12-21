@@ -1,5 +1,11 @@
 package org.sodeja.parsec.self.model;
 
-public class Grouped implements Primary {
+import java.util.List;
 
+public class Grouped implements Primary {
+	public final List<Definition> definitions;
+
+	public Grouped(List<Definition> definitions) {
+		this.definitions = definitions;
+	}
 }

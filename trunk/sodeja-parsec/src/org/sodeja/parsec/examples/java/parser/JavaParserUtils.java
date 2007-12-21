@@ -20,12 +20,12 @@ public class JavaParserUtils {
 			@Override
 			protected ParsingResult<Token<?>, Token<?>> executeDelegate(ConsList<Token<?>> tokens) {
 				if(! Separator.class.isInstance(tokens.head())) {
-					return new ParseError<Token<?>, Token<?>>("Expecting " + sep);
+					return new ParseError<Token<?>, Token<?>>("Expecting " + sep, tokens);
 				}
 				
 				Separator realSep = (Separator) tokens.head();
 				if(realSep.value != sep) {
-					return new ParseError<Token<?>, Token<?>>("Expecting " + sep);
+					return new ParseError<Token<?>, Token<?>>("Expecting " + sep, tokens);
 				}
 				
 				return new ParseSuccess<Token<?>, Token<?>>(tokens.head(), tokens.tail());
@@ -38,12 +38,12 @@ public class JavaParserUtils {
 			@Override
 			protected ParsingResult<Token<?>, Token<?>> executeDelegate(ConsList<Token<?>> tokens) {
 				if(! Keyword.class.isInstance(tokens.head())) {
-					return new ParseError<Token<?>, Token<?>>("Expecting " + key);
+					return new ParseError<Token<?>, Token<?>>("Expecting " + key, tokens);
 				}
 				
 				Keyword realSep = (Keyword) tokens.head();
 				if(realSep.value != key) {
-					return new ParseError<Token<?>, Token<?>>("Expecting " + key);
+					return new ParseError<Token<?>, Token<?>>("Expecting " + key, tokens);
 				}
 				
 				return new ParseSuccess<Token<?>, Token<?>>(tokens.head(), tokens.tail());
@@ -56,12 +56,12 @@ public class JavaParserUtils {
 			@Override
 			protected ParsingResult<Token<?>, Token<?>> executeDelegate(ConsList<Token<?>> tokens) {
 				if(! Operator.class.isInstance(tokens.head())) {
-					return new ParseError<Token<?>, Token<?>>("Expecting " + op);
+					return new ParseError<Token<?>, Token<?>>("Expecting " + op, tokens);
 				}
 				
 				Operator realSep = (Operator) tokens.head();
 				if(realSep.value != op) {
-					return new ParseError<Token<?>, Token<?>>("Expecting " + op);
+					return new ParseError<Token<?>, Token<?>>("Expecting " + op, tokens);
 				}
 				
 				return new ParseSuccess<Token<?>, Token<?>>(tokens.head(), tokens.tail());

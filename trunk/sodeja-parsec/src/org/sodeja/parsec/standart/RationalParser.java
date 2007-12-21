@@ -20,7 +20,7 @@ public class RationalParser extends AbstractParser<String, Rational> {
 			Rational value = new Rational(head);
 			return new ParseSuccess<String, Rational>(value, tokens.tail());
 		} catch(NumberFormatException exc) {
-			return new ParseError<String, Rational>("The token was not an rational!");
+			return new ParseError<String, Rational>("The token was not an rational!", tokens);
 		}
 	}
 }

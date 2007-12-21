@@ -34,6 +34,6 @@ public class AlternativeParser<Tok, Res> extends AbstractParser<Tok, Res> {
 			return secondExecute;
 		}
 		
-		return new ParseError<Tok, Res>("Expecting " + first.getName() + " or " + second.getName());
+		return new ParseError<Tok, Res>("Expecting " + first.getName() + " or " + second.getName(), tokens);
 	}
 }

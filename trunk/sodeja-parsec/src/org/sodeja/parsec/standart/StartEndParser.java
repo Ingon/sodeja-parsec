@@ -22,6 +22,6 @@ public class StartEndParser extends AbstractParser<String, String> {
 			return new ParseSuccess<String, String>(token.substring(1, token.length() - 1), tokens.tail());
 		}
 		
-		return new ParseError<String, String>("Expects an string in " + seq + "..." + seq + " form!");
+		return new ParseError<String, String>("Expects an string in " + seq + "..." + seq + " form!", tokens);
 	}
 }

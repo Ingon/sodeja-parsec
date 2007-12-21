@@ -14,15 +14,15 @@ public abstract class AbstractParser<Tok, Res> implements Parser<Tok, Res> {
 	
 	public ParsingResult<Tok, Res> execute(ConsList<Tok> tokens) {
 		if(tokens == null || tokens.isEmpty()) {
-			return emptyError();
+			return emptyError(tokens);
 		}
 		return executeDelegate(tokens);
 	}
 	
 	protected abstract ParsingResult<Tok, Res> executeDelegate(ConsList<Tok> tokens);
 	
-	protected ParseError<Tok, Res> emptyError() {
-		return new ParseError<Tok, Res>(getName() + " expects additional input!");
+	protected ParseError<Tok, Res> emptyError(ConsList<Tok> tokens) {
+		return new ParseError<Tok, Res>(getName() + " expects additional input!", tokens);
 	}
 	
 //	public static <Tok, Res> List<Pair<Res, ConsList<Tok>>> create(Res value, ConsList<Tok> tokens) {
@@ -54,7 +54,7 @@ public abstract class AbstractParser<Tok, Res> implements Parser<Tok, Res> {
 	}
 	
 	protected ParsingResult<Tok, Res> failure(ParsingResult<?, ?> result) {
-		return new ParseError<Tok, Res>(getFailure(result));
+		return new ParseError<Tok, Res>(getFailure(result), ((ParseError<Tok, ?>) result).tokens);
 	}
 	
 	protected ParsingResult<Tok, Res> success(Res res, ConsList<Tok> tokens) {

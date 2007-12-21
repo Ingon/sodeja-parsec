@@ -34,7 +34,7 @@ public class OneOrMoreParser<Tok, Res> extends AbstractParser<Tok, List<Res>> {
 		}
 		
 		if(tempResult.size() == 0) {
-			return new ParseError<Tok, List<Res>>("Expecting one or more " + delegate.getName());
+			return new ParseError<Tok, List<Res>>("Expecting one or more " + delegate.getName(), tokens);
 		}
 		
 		return new ParseSuccess<Tok, List<Res>>(tempResult, tempTokens);
