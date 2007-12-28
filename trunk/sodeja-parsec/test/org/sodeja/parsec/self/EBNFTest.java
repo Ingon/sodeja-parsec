@@ -1,8 +1,13 @@
 package org.sodeja.parsec.self;
 
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.sodeja.collections.ConsList;
+import org.sodeja.collections.ListUtils;
+import org.sodeja.functional.Function1;
+import org.sodeja.functional.Predicate1;
 import org.sodeja.parsec.self.model.Syntax;
 
 import junit.framework.TestCase;
@@ -53,6 +58,10 @@ public class EBNFTest extends TestCase {
 		
 		System.out.println("Syntax: " + syntax);
 		
+//		String jsonTest = "{" +
+//			"'class': 'com.icw.phr.fedex.FedexCall', " +
+//			"'serviceName': 'service1', " +
+//			"'methodName': 'method1'}"; 
 		String jsonTest = "{" +
 			"'class': 'com.icw.phr.fedex.FedexCall', " +
 			"'serviceName': 'service1', " +
@@ -68,14 +77,71 @@ public class EBNFTest extends TestCase {
 		Node node = parser.parse(jsonTokens);
 
 		System.out.println("Node: " + node);
+		
+		Object obj = applyRules(node);
+		System.out.println("OBJ: " + obj);
 	}
 	
-//	private Object applyRules(Node node) {
-//		if(node instanceof RuleNode) {
-//			applyRuleNode((RuleNode) node);
-//		} else if(node instanceof )
-//	}
+	private Object applyRules(Node node) {
+		if(node instanceof RuleNode) {
+			return applyRuleNode((RuleNode) node);
+		} else if(node instanceof IntegerNode) {
+			return ((IntegerNode) node).value;
+		} else if(node instanceof LiteralNode) {
+			return ((LiteralNode) node).name;
+		} else if(node instanceof IdentifierNode) {
+			return ((IdentifierNode) node).name;
+		}
+		
+		throw new IllegalArgumentException("Unsupported node: " + node);
+	}
 	
+	private Object applyRuleNode(final RuleNode rule) {
+		List<Object> internals = ListUtils.map(rule.nodes, new Function1<Object, Object>() {
+			@Override
+			public Object execute(Object p) {
+				if(p instanceof Node) {
+					return applyRules((Node) p);
+				}
+				
+				throw new IllegalArgumentException("Unsupported object: " + p);
+			}});
+		
+		if(rule.name.equals("object")) {
+			if(internals.size() == 2) {
+				return new JSONObject(new ArrayList<JSONField>());
+			}
+			Object internal = internals.get(1);
+			if(internal instanceof JSONField) {
+				return new JSONObject(ListUtils.asList((JSONField) internal));
+			}
+			return new JSONObject((List<JSONField>) internal);
+		} else if(rule.name.equals("pair")) {
+			return new JSONField((String) internals.get(0), internals.get(2));
+		} else if(rule.name.equals("members")) {
+			if(internals.get(2) instanceof ConsList) {
+				return new ConsList<JSONField>((JSONField) internals.get(0), ((ConsList<JSONField>) internals.get(2)));
+			}
+			return new ConsList<JSONField>((JSONField) internals.get(0), new ConsList<JSONField>((JSONField) internals.get(2)));
+		} else if(rule.name.equals("elements")) {
+			if(internals.size() == 2) {
+				return new ArrayList();
+			}
+			
+			if(internals.get(2) instanceof ConsList) {
+				return new ConsList(internals.get(0), (ConsList) internals.get(2));
+			}
+			return new ConsList(internals.get(0), new ConsList(internals.get(2)));
+		} else if(rule.name.equals("array")) {
+			if(internals.size() == 2) {
+				return new Object[0];
+			}
+			return internals.get(1);
+		}
+		
+		throw new IllegalArgumentException("Unsupported rule: " + rule.name);
+	}
+
 	public static void main(String[] args) {
 		new EBNFTest().testJson();
 	}
