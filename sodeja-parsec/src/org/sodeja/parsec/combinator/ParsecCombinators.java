@@ -106,6 +106,17 @@ public class ParsecCombinators {
 			}});
 	}
 
+	public static <Tok, Res, Res1, Res2> Parser<Tok, Res> thenParserCons1(final String name, 
+			Parser<Tok, Res1> first, 
+			Parser<Tok, Res2> second, 
+			final Class<Res> clazz) {
+		return thenParser(name, first, second, new Function2<Res, Res1, Res2>() {
+			@Override
+			public Res execute(Res1 p1, Res2 p2) {
+				return makeInstance(name, clazz, p1);
+			}});
+	}
+
 	public static <Tok, Res, Res1, Res2> Parser<Tok, Res> thenParserCons2(final String name, 
 			Parser<Tok, Res1> first, 
 			Parser<Tok, Res2> second, 
