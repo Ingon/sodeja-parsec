@@ -73,7 +73,7 @@ public class ParsecCombinators {
 				if(p2 == null) {
 					return p1;
 				}
-				return alternative("?", p1, p2);
+				return alternative(p1.getName() + " or " + p2.getName(), p1, p2);
 			}});
 	}
 
@@ -84,7 +84,7 @@ public class ParsecCombinators {
 				if(p2 == null) {
 					return p1;
 				}
-				return alternative("?", p1, p2);
+				return alternative(p1.getName() + " or " + p2.getName(), p1, p2);
 			}});
 	}
 	
