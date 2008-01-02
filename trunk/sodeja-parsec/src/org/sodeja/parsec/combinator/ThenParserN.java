@@ -13,9 +13,9 @@ import org.sodeja.parsec.ParsingResult;
 public class ThenParserN<Tok, Res> extends AbstractParser<Tok, Res> {
 	
 	private final FunctionN<Res, Object> combinator;
-	private final Parser<Tok, Object>[] parsers;
+	private final Parser<Tok, ?>[] parsers;
 	
-	public ThenParserN(final String name, final FunctionN<Res, Object> combinator, final Parser<Tok, Object>... parsers) {
+	public ThenParserN(final String name, final FunctionN<Res, Object> combinator, final Parser<Tok, ?>... parsers) {
 		super(name);
 		
 		this.combinator = combinator;
@@ -27,8 +27,8 @@ public class ThenParserN<Tok, Res> extends AbstractParser<Tok, Res> {
 		ConsList<Tok> currentTokens = tokens;
 		List<Object> results = new ArrayList<Object>();
 		
-		for(Parser<Tok, Object> parser : parsers) {
-			ParsingResult<Tok, Object> result = parser.execute(currentTokens);
+		for(Parser<Tok, ?> parser : parsers) {
+			ParsingResult<Tok, ?> result = parser.execute(currentTokens);
 			if(isFailure(result)) {
 				return failure(result);
 			}
