@@ -137,9 +137,9 @@ public class EBNFParser extends AbstractSemanticParser<String, Node> {
 
 	private Parser createParser(SpecialSequence ss) {
 		if(ss.value.equals("string")) {
-			return applyCons("IDENTIFIER", justString("IDENTIFIER"), IdentifierNode.class);
+			return applyCons("IDENTIFIER", justString("IDENTIFIER_DELEGATE"), IdentifierNode.class);
 		} else if(ss.value.equals("integer")) {
-			return applyCons("INTEGER", simpleIntegerParser("NUMBER"), IntegerNode.class);
+			return applyCons("INTEGER", simpleIntegerParser("INTEGER_DELEGATE"), IntegerNode.class);
 		}
 		
 		throw new IllegalArgumentException("Unrecognized special: " + ss.value);
