@@ -45,6 +45,6 @@ public class EBNFGrammarLexer extends AbstractLexer<String> {
 			return;
 		}
 		
-		tokens.add(String.valueOf(ch));
+		tokens.add(createTokenFrom(String.valueOf(ch)));
 	}
 }
