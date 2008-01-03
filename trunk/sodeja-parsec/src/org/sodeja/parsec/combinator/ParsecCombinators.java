@@ -30,6 +30,10 @@ public class ParsecCombinators {
 		return new ZeroOrMoreWithSeparatorParser<Tok, Res, Res1>(name, parser, sep);
 	}
 	
+	public static <Tok, Res> Parser<Tok, List<Res>> nOrMore(String name, Parser<Tok, Res> parser, int times) {
+		return new NOrMoreParser<Tok, Res>(name, parser, times);
+	}
+	
 	public static <Tok, Res> Parser<Tok, Res> zeroOrOne(String name, Parser<Tok, Res> parser) {
 		return new ZeroOrOneParser<Tok, Res>(name, parser);
 	}
