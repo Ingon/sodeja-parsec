@@ -1,7 +1,11 @@
 package org.sodeja.parsec2;
 
 import static org.sodeja.parsec2.ParserCombinators.*;
+
+import java.util.List;
+
 import org.sodeja.collections.ConsList;
+import org.sodeja.functional.Function1;
 
 public class PrimitiveParsers {
 	public static Parser anyCharacter() {
@@ -59,6 +63,19 @@ public class PrimitiveParsers {
 		return then(str, parsers);
 	}
 
+	public static Parser stringAsString(final String str) {
+		return apply(string(str), new Function1() {
+			@Override
+			public Object execute(Object p) {
+				List vals = (List) p;
+				char[] chs = new char[vals.size()];
+				for(int i = 0;i < chs.length;i++) {
+					chs[i] = (Character) vals.get(i);
+				}
+				return new String(chs);
+			}});
+	}
+	
 	public static Parser oneOfCharacters(final String str) {
 		Parser[] parsers = new Parser[str.length()];
 		for(int i = 0, n = str.length();i < n;i++) {

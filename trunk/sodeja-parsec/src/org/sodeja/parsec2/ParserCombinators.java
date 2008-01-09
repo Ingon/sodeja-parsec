@@ -21,7 +21,10 @@ public class ParserCombinators {
 						return fail("Parser " + parser.getName() + " failed with " + getFailure(result), temp);
 					}
 					
-					results.add(getSuccess(result));
+					Object successValue = getSuccess(result);
+					if(successValue != null) {
+						results.add(successValue);
+					}
 					temp = getTokens(result);
 				}
 				
@@ -30,7 +33,7 @@ public class ParserCombinators {
 	}
 	
 	public static Parser then(final Parser... parsers) {
-		return then("match " + appendParsers(parsers), parsers);
+		return then(appendParsers(" , ", parsers), parsers);
 	}
 
 	public static Parser or(String name, final Parser... parsers) {
@@ -48,11 +51,11 @@ public class ParserCombinators {
 	}
 
 	public static Parser or(final Parser... parsers) {
-		return or("match one of " + appendParsers(parsers), parsers);
+		return or(appendParsers(" | ", parsers), parsers);
 	}
 	
 	public static Parser matchUnless(final Parser p1, final Parser p2) {
-		return new AbstractParser("match " + p1.getName() + " unless " + p2.getName()) {
+		return new AbstractParser(p1.getName() + " - " + p2.getName()) {
 			@Override
 			public ParseResult match(ConsList tokens) {
 				ParseResult res = p2.match(tokens);
@@ -64,7 +67,7 @@ public class ParserCombinators {
 	}
 	
 	public static Parser optional(final Parser parser) {
-		return new AbstractParser("optional " + parser.getName()) {
+		return new AbstractParser("[" + parser.getName() + "]") {
 			@Override
 			public ParseResult match(ConsList tokens) {
 				ParseResult pr = parser.match(tokens);
@@ -76,7 +79,7 @@ public class ParserCombinators {
 	}
 	
 	public static Parser repeated(final Parser parser) {
-		return new AbstractParser("repeated " + parser.getName()) {
+		return new AbstractParser("{" + parser.getName() + "}") {
 			@Override
 			public ParseResult match(ConsList tokens) {
 				ConsList temp = tokens;
@@ -84,6 +87,9 @@ public class ParserCombinators {
 				for(ParseResult pr = parser.match(temp); isSuccess(pr); pr = parser.match(temp)) {
 					results.add(getSuccess(pr));
 					temp = getTokens(pr);
+				}
+				if(results.isEmpty()) {
+					results = null;
 				}
 				return success(results, temp);
 			}
@@ -96,6 +102,20 @@ public class ParserCombinators {
 
 	public static Parser optionalThen(final Parser... parsers) {
 		return optional(then(parsers));
+	}
+	
+	public static Parser apply(final Parser parser, final Function1 combinator) {
+		return new AbstractParser(parser.getName()) {
+			@Override
+			public ParseResult match(ConsList tokens) {
+				ParseResult pr = parser.match(tokens);
+				if(isFailure(pr)) {
+					return pr;
+				}
+				
+				Object obj = getSuccess(pr);
+				return success(combinator.execute(obj), getTokens(pr));
+			}};
 	}
 	
 	public static boolean isSuccess(ParseResult res) {
@@ -135,8 +155,8 @@ public class ParserCombinators {
 		return new ParseSuccess(val, tokens);
 	}
 	
-	private static String appendParsers(final Parser... parsers) {
-		return StringUtils.appendWithSeparator(ListUtils.asList(parsers), ",", new Function1<String, Parser>() {
+	private static String appendParsers(String div, final Parser... parsers) {
+		return StringUtils.appendWithSeparator(ListUtils.asList(parsers), div, new Function1<String, Parser>() {
 			@Override
 			public String execute(Parser p) {
 				return p.getName();
