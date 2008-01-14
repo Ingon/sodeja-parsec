@@ -208,6 +208,29 @@ public class ParsecCombinators {
 			}});
 	}
 	
+	public static <Tok, Res, Res1, Res2, Res3> Parser<Tok, Res> thenParser3Cons123(final String name, 
+			Parser<Tok, Res1> first, 
+			Parser<Tok, Res2> second, 
+			Parser<Tok, Res3> third, 
+			final Class<Res> clazz) {
+		return thenParser3(name, first, second, third, new Function3<Res, Res1, Res2, Res3>() {
+			@Override
+			public Res execute(Res1 p1, Res2 p2, Res3 p3) {
+				return makeInstance(name, clazz, p1, p2, p3);
+			}});
+	}
+
+	public static <Tok, Res, Res2, Res3> Parser<Tok, Res> thenParser3Just1(final String name, 
+			Parser<Tok, Res> first, 
+			Parser<Tok, Res2> second, 
+			Parser<Tok, Res3> third) {
+		return thenParser3(name, first, second, third, new Function3<Res, Res, Res2, Res3>() {
+			@Override
+			public Res execute(Res p1, Res2 p2, Res3 p3) {
+				return p1;
+			}});
+	}
+	
 	public static <Tok, Res, Res1, Res3> Parser<Tok, Res> thenParser3Just2(final String name, 
 			Parser<Tok, Res1> first, 
 			Parser<Tok, Res> second, 
@@ -304,6 +327,30 @@ public class ParsecCombinators {
 			}});
 	}
 
+	public static <Tok, Res, Res1, Res3, Res4> Parser<Tok, Res> thenParser4Just2(String name, 
+			Parser<Tok, Res1> first, 
+			Parser<Tok, Res> second, 
+			Parser<Tok, Res3> third, 
+			Parser<Tok, Res4> fourth) {
+		return new ThenParser4<Tok, Res, Res1, Res, Res3, Res4>(name, first, second, third, fourth, new Function4<Res, Res1, Res, Res3, Res4>() {
+			@Override
+			public Res execute(Res1 p1, Res p2, Res3 p3, Res4 p4) {
+				return p2;
+			}});
+	}
+
+	public static <Tok, Res, Res1, Res2, Res4> Parser<Tok, Res> thenParser4Just3(String name, 
+			Parser<Tok, Res1> first, 
+			Parser<Tok, Res2> second, 
+			Parser<Tok, Res> third, 
+			Parser<Tok, Res4> fourth) {
+		return new ThenParser4<Tok, Res, Res1, Res2, Res, Res4>(name, first, second, third, fourth, new Function4<Res, Res1, Res2, Res, Res4>() {
+			@Override
+			public Res execute(Res1 p1, Res2 p2, Res p3, Res4 p4) {
+				return p3;
+			}});
+	}
+	
 	@SuppressWarnings("unchecked")
 	private static <T> T makeInstance(String name, Class<T> clazz, Object... params) {
 		Constructor<?> constructor = clazz.getConstructors()[0];
