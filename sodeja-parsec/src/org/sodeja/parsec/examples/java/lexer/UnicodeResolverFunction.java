@@ -3,7 +3,6 @@ package org.sodeja.parsec.examples.java.lexer;
 import static org.sodeja.functional.Maybe.just;
 import static org.sodeja.functional.Maybe.nothing;
 
-import java.util.Deque;
 import java.util.LinkedList;
 
 import org.sodeja.functional.Maybe;
@@ -14,7 +13,7 @@ import org.sodeja.lang.CharacterUtils;
 public class UnicodeResolverFunction implements GeneratorFunction<Character> {
 	
 	private Generator<Character> input;
-	private Deque<Character> buffer;
+	private LinkedList<Character> buffer;
 	
 	public UnicodeResolverFunction(Generator<Character> input) {
 		this.input = input;
@@ -24,7 +23,7 @@ public class UnicodeResolverFunction implements GeneratorFunction<Character> {
 	@Override
 	public Maybe<Character> execute() {
 		if(! buffer.isEmpty()) {
-			return just(buffer.pollFirst());
+			return just(buffer.getFirst());
 		}
 		
 		if(input == null) {
@@ -40,7 +39,7 @@ public class UnicodeResolverFunction implements GeneratorFunction<Character> {
 		Generator<Character> ugen = input.tail();
 		Character u = ugen.head();
 		if(u != 'u') {
-			buffer.offerLast(u);
+			buffer.addLast(u);
 			input = ugen.tail();
 			return just(backslash);
 		}
