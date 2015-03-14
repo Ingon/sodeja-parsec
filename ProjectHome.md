@@ -1,0 +1,1 @@
+A parser library in Java. Despite generic implementations presented are some specific - like bean path, xml, etc. It is similar to the Haskell's parsec library.
